@@ -84,79 +84,46 @@ Response: array, one element per query:
 
 ## 2. Collector (TypeScript, Bun 1.2)
 
-No build step (Bun runs TS directly). Deps: `@influxdata/influxdb3-client`, `yaml`, `effect` (phase 3b). Test runner: `bun test`. Bun only auto-loads a cwd `.env`; root `.env` reaches the process via `bunfig.toml` preload (`src/load-dot-env.ts`), so no `--env-file` flag is needed.
+No build step (Bun runs TS directly). Installed deps: `@types/bun` only; `@influxdata/influxdb3-client` + `yaml` land in phase 3a, `effect` in phase 3b. Test runner: `bun test`. Bun only auto-loads a cwd `.env`; root `.env` reaches the process via `bunfig.toml` preload (`src/load-dot-env.ts`), so no `--env-file` flag is needed.
 
 ### Loop (every tick)
 
 1. Ensure valid Proemion token.
 2. Compute aligned window (see below).
-3. Build `/timeseries` request for all machines × allowed signals.
+3. Build `/timeseries` request for all machines × allowed signals (chunk at 350 queries/request).
 4. Parse response → points.
 5. Write to InfluxDB.
 6. Record last timestamp; sleep.
 
 On failure: log, retry next tick. Never crash loop.
 
-### Token
+### Proemion client (`src/proemion.ts`) ✅
+
+Types: `Organization`, `Machine`, `SignalType`, `SignalUnit`, `LogicalType`, `Signal`. Constructor `(baseUrl, tokenUrl, clientId, clientSecret)`.
+
+Implemented: private `ensureValidAccessToken()` (cache, refresh 60s early) and `fetchJson<T>(path)` (Bearer GET, throw on non-2xx); public `fetchMachineCount()`, `fetchMachines(limit, offset)`, `fetchMachineSignals(machineId)`.
+
+`timeseries(from, to, bucketSize, queries)` lands in phase 3a.
 
 ```ts
-export class ProemionClient {
-  private token: string | null = null;
-  private expiresAt = 0;
-
-  constructor(
-    private readonly baseUrl: string,
-    private readonly clientId: string,
-    private readonly clientSecret: string,
-    private readonly tokenUrl: string,
-  ) {}
-
-  private async ensureToken(): Promise<string> {
-    if (this.token && Date.now() < this.expiresAt - 60_000) {
-      return this.token;
-    }
-    const res = await fetch(this.tokenUrl, {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        grant_type: "client_credentials",
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
-      }),
-    });
-    if (!res.ok) throw new Error(`auth failed: HTTP ${res.status}`);
-    const body = (await res.json()) as {
-      access_token: string;
-      expires_in: number;
-    };
-    this.token = body.access_token;
-    this.expiresAt = Date.now() + body.expires_in * 1000;
-    return this.token;
+private async ensureValidAccessToken(): Promise<string> {
+  if (this.cachedAccessToken && Date.now() < this.accessTokenExpiresAtMs - 60_000) {
+    return this.cachedAccessToken;
   }
-
-  async timeseries(
-    fromMs: number,
-    toMs: number,
-    bucketMs: number,
-    queries: unknown[],
-  ) {
-    const token = await this.ensureToken();
-    const res = await fetch(`${this.baseUrl}/timeseries`, {
-      method: "POST",
-      headers: {
-        authorization: `Bearer ${token}`,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        from: fromMs,
-        to: toMs,
-        bucketSize: bucketMs,
-        queries,
-      }),
-    });
-    if (!res.ok) throw new Error(`timeseries failed: HTTP ${res.status}`);
-    return res.json();
-  }
+  const authHttpResponse = await fetch(this.tokenUrl, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: this.clientId,
+      client_secret: this.clientSecret,
+    }),
+  });
+  if (!authHttpResponse.ok) throw new Error(`auth failed: HTTP ${authHttpResponse.status}`);
+  const tokenBody = (await authHttpResponse.json()) as ProemionTokenResponse;
+  this.cachedAccessToken = tokenBody.access_token;
+  this.accessTokenExpiresAtMs = Date.now() + tokenBody.expires_in * 1000;
+  return this.cachedAccessToken;
 }
 ```
 
@@ -174,23 +141,25 @@ Each poll overlaps 1–2 buckets to catch late data. Backfill = same path pointe
 
 ### Files (`collector/`)
 
-- `src/config.ts` — env + `config/collector.yaml` (machines, allowlist, interval, aggregation/signal).
-- `src/proemion.ts` — token, `/timeseries`, machine/signal listing.
-- `src/influx.ts` — writes via `@influxdata/influxdb3-client` Point API.
-- `src/window.ts` — pure alignment math, no I/O.
-- `src/main.ts` — loop + `discover`, `backfill`, `--dry-run`.
-- `src/discover.ts` — phase 2 one-off.
-- `test/` — alignment + point building.
+- `src/config.ts` — env + `config/collector.yaml` (machines, allowlist, interval, aggregation/signal). Phase 3a.
+- `src/proemion.ts` ✅ — token cache + machine/signal listing; `/timeseries` in phase 3a.
+- `src/window.ts` — pure alignment math, no I/O. Phase 3a.
+- `src/points.ts` — series → point (tags, escaping, ns timestamp). Phase 3a.
+- `src/influx.ts` — writes via `@influxdata/influxdb3-client` Point API. Phase 3a.
+- `src/main.ts` — loop + `backfill`, `--dry-run`. Phase 3a.
+- `src/discover.ts` ✅ — phase 2 one-off.
+- `src/load-dot-env.ts` ✅ — preload; loads repo-root `.env` (wired in `bunfig.toml`).
+- `test/` — alignment + point building. Phase 3a.
 
 `--dry-run`: print line protocol, no write.
 
 ### Point format
 
 ```
-signal,machine_id=ABC-1234,machine_name=Excavator\ 1,signal_key=value.clamp.30.voltage,unit=V value=13.8 1757654460000000000
+signal,machine_id=209233,machine_name=CANlink\ 10000,signal_key=value.Anti-Cavitation.Pressure,unit=predefined.unit.NUMBER value=13.8 1757654460000000000
 ```
 
-`signal` = table. Tags: `machine_id,machine_name,signal_key,unit`. Field: `value`. Timestamp: ns (ms × 1e6). Escape spaces/commas/`=` in tag values.
+`signal` = table. Tags: `machine_id,machine_name,signal_key,unit`. Field: `value`. Timestamp: ns (ms × 1e6). Escape spaces/commas/`=` in tag values. `machine_id` is the numeric `id` string from `/machines`; `unit` is the signal's `unit.key`.
 
 ### Effect migration (phase 3b)
 
@@ -413,17 +382,26 @@ Services: `influxdb3-core` (:8181), `grafana` (:3000), `collector`. Shared netwo
 
 Verify: curl write + SQL read-back ✅, datasource health ✅.
 
-### Phase 2 — Discovery
+### Phase 2 — Discovery ✅
 
 Auth + machine/signal listing via `bun run discover` (`collector/src/discover.ts`, one-off). Paginate `/machines`, per-machine `/signals`. Emit `discovery/machines.json`, `discovery/signals.csv` (key,label,type,unit,logicalType,machines).
 
-Verify: review CSV, pick ingest signals.
+Findings: 9 machines, 153 unique signals, 1201 machine×signal series. All signals numeric. `logicalType` is `counter:increasing` for every signal, so it cannot discriminate. 103 signals exist on all 9 machines. At the 350-query cap, a full poll is 4 `/timeseries` requests.
+
+Verify: CSV reviewed ✅. Ingest allowlist still open (see §8).
 
 ### Phase 3a — Collector core (plain TS)
 
-Config, OAuth, `/timeseries`, point building, alignment, overlap, idempotent writes, backfill, dry-run. Tests: alignment + point building.
+Order:
 
-Verify: dry-run lines correct; live run lands at right timestamps.
+1. `config/collector.yaml` + `src/config.ts` — machine ids, signal allowlist, interval, aggregation, bucket size, overlap. Allowlist derived from `discovery/signals.csv` (`key`, `machines`).
+2. `src/window.ts` — pure alignment + overlap, no I/O.
+3. `src/points.ts` — series → point: tags, escaping, ns timestamp.
+4. `src/influx.ts` — `@influxdata/influxdb3-client` write.
+5. `src/main.ts` — loop, `--dry-run`, `backfill <from> <to>`. Chunk queries at 350/request.
+6. `bun test` — alignment + point building.
+
+Verify: dry-run lines correct (tags, ns timestamps, grid-aligned buckets); live run lands at right timestamps; re-run writes identical points.
 
 ### Phase 3b — Effect
 
@@ -459,7 +437,7 @@ Verify: full restart, zero manual steps.
 
 Resolved: InfluxDB 3 Core + SQL; TS on Bun, no build; Effect gradual (plain first); machine IDs + signal scope via phase-2 discovery.
 
-Open: alert destination (phase 5).
+Open: ingest allowlist scope — all 153 signals (1201 series, 4 requests/poll) or a subset (phase 3a). Alert destination (phase 5).
 
 ## 9. Glossary
 
