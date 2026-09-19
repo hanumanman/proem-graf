@@ -84,7 +84,7 @@ Response: array, one element per query:
 
 ## 2. Collector (TypeScript, Bun 1.2)
 
-No build step (Bun runs TS directly). Deps: `@influxdata/influxdb3-client`, `yaml`, `effect` (phase 3b). Test runner: `bun test`. `.env` lives at repo root; Bun loads cwd-only, so scripts run with `--env-file=../.env`.
+No build step (Bun runs TS directly). Deps: `@influxdata/influxdb3-client`, `yaml`, `effect` (phase 3b). Test runner: `bun test`. Bun only auto-loads a cwd `.env`; root `.env` reaches the process via `bunfig.toml` preload (`src/load-dot-env.ts`), so no `--env-file` flag is needed.
 
 ### Loop (every tick)
 
