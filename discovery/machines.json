@@ -1,0 +1,261 @@
+{
+  "fetchedAt": "2026-09-19T11:37:49.363Z",
+  "machines": [
+    {
+      "id": "209233",
+      "name": "TCA - 2561 - Jed",
+      "serial": "2561",
+      "pin": null,
+      "vin": null,
+      "organization": {
+        "id": "a3733443-a6c8-452c-8ce3-30a87ab99cb1",
+        "name": "Jeddah Cranes",
+        "type": "dealer"
+      },
+      "communicationUnits": [
+        {
+          "id": "865167066577538",
+          "name": "865167066577538",
+          "state": "live",
+          "cuType": "clm",
+          "model": "CANlink mobile 3600",
+          "datasource": "Hardware Proemion CANlink mobile 3600",
+          "sim": "89490200001829344178",
+          "installedAt": 1747704458551
+        }
+      ],
+      "model": {
+        "id": "1f4dbd3e-365c-4d24-95ab-f9660d980ddc",
+        "name": "Jeddah 2561"
+      }
+    },
+    {
+      "id": "271515",
+      "name": "Resolution Rigging - 2632",
+      "serial": "2632",
+      "pin": null,
+      "vin": null,
+      "organization": {
+        "id": "d83a95ec-7c37-4332-aa3d-b50687e26dff",
+        "name": "RRS Clients",
+        "type": "machine_owner"
+      },
+      "communicationUnits": [
+        {
+          "id": "867929066594039",
+          "name": "867929066594039",
+          "state": "live",
+          "cuType": "clm",
+          "model": "CANlink mobile 3600",
+          "datasource": "Hardware Proemion CANlink mobile 3600",
+          "sim": "89490200002008742968",
+          "installedAt": 1783383639303
+        }
+      ],
+      "model": {
+        "id": "ab841bb3-3eb0-4132-a2d1-fb3436908e7a",
+        "name": "Resolution 2632"
+      },
+      "oemName": "IFM Tower Crane",
+      "commissionedAt": 1765198800000
+    },
+    {
+      "id": "287729",
+      "name": "Marr Contracting - 2660",
+      "serial": "2660",
+      "pin": null,
+      "vin": null,
+      "organization": {
+        "id": "d6d675c2-3737-4f92-b54c-459608b1e358",
+        "name": "Marr Contracting",
+        "type": "dealer"
+      },
+      "communicationUnits": [
+        {
+          "id": "867929067773053",
+          "name": "867929067773053",
+          "state": "live",
+          "cuType": "clm",
+          "model": "CANlink mobile 3600",
+          "datasource": "Hardware Proemion CANlink mobile 3600",
+          "sim": "89490200002026455650",
+          "installedAt": 1744344714990
+        }
+      ],
+      "model": {
+        "id": "2b3eb24d-bc7a-44ae-83d3-2cfc68fd1b12",
+        "name": "Marr 2660"
+      }
+    },
+    {
+      "id": "287743",
+      "name": "TCB - 2615 - Jed",
+      "serial": "2615",
+      "pin": null,
+      "vin": null,
+      "organization": {
+        "id": "a3733443-a6c8-452c-8ce3-30a87ab99cb1",
+        "name": "Jeddah Cranes",
+        "type": "dealer"
+      },
+      "communicationUnits": [
+        {
+          "id": "867929067852774",
+          "name": "867929067852774",
+          "state": "live",
+          "cuType": "clm",
+          "model": "CANlink mobile 3600",
+          "datasource": "Hardware Proemion CANlink mobile 3600",
+          "sim": "89490200002026455494",
+          "installedAt": 1753746155584
+        }
+      ],
+      "model": {
+        "id": "53c1fb97-0e85-41a3-9704-f6e5633f1dff",
+        "name": "Jeddah 2615"
+      },
+      "oemName": "Jeddah Crane - 2561"
+    },
+    {
+      "id": "287744",
+      "name": "TCC - 2616 - Jed",
+      "serial": "2616",
+      "pin": null,
+      "vin": null,
+      "organization": {
+        "id": "a3733443-a6c8-452c-8ce3-30a87ab99cb1",
+        "name": "Jeddah Cranes",
+        "type": "dealer"
+      },
+      "communicationUnits": [
+        {
+          "id": "867929067852899",
+          "name": "867929067852899",
+          "state": "live",
+          "cuType": "clm",
+          "model": "CANlink mobile 3600",
+          "datasource": "Hardware Proemion CANlink mobile 3600",
+          "sim": "89490200002026455478",
+          "installedAt": 1754291066015
+        }
+      ],
+      "model": {
+        "id": "492e3e74-36a1-4672-889a-b4db9df75634",
+        "name": "Jeddah 2616"
+      },
+      "oemName": "Jeddah - 2616"
+    },
+    {
+      "id": "294854",
+      "name": "General Cranes - 1532",
+      "serial": "1532",
+      "pin": null,
+      "vin": null,
+      "organization": {
+        "id": "3313bc71-454c-4d34-8a48-4a032a45d24a",
+        "name": "General Cranes",
+        "type": "dealer"
+      },
+      "communicationUnits": [
+        {
+          "id": "867652071296172",
+          "name": "867652071296172",
+          "state": "live",
+          "cuType": "clm",
+          "model": "CANlink mobile 3600",
+          "datasource": "Hardware Proemion CANlink mobile 3600",
+          "sim": "89490200002039329744",
+          "installedAt": 1780624981251
+        }
+      ],
+      "model": {
+        "id": "fbcf7e61-3eed-4886-89e7-82e30c119ec4",
+        "name": "General Cranes 1532"
+      }
+    },
+    {
+      "id": "309043",
+      "name": "Resolution Rigging - 2614 - Reserved",
+      "serial": "2614",
+      "pin": null,
+      "vin": null,
+      "organization": {
+        "id": "48da4648-091f-4a34-ac79-829044216299",
+        "name": "Favelle Favco Cranes",
+        "type": "oem"
+      },
+      "communicationUnits": [
+        {
+          "id": "867652075989327",
+          "name": "867652075989327",
+          "state": "provisioned",
+          "cuType": "clm",
+          "model": "CANlink mobile 3600",
+          "datasource": "Hardware Proemion CANlink mobile 3600",
+          "sim": "8944477200000891235",
+          "installedAt": 1761259587669
+        }
+      ],
+      "model": {
+        "id": "e0b1cb2c-526b-4534-a73f-0815af501e65",
+        "name": "Resolution 2614"
+      }
+    },
+    {
+      "id": "335810",
+      "name": "CANlink 10000",
+      "serial": "10666",
+      "pin": null,
+      "vin": null,
+      "organization": {
+        "id": "7b1e28cb-edb7-486b-99e3-90f3356f11d3",
+        "name": "[2] Renter 1",
+        "type": "machine_owner"
+      },
+      "communicationUnits": [
+        {
+          "id": "867652079971578",
+          "name": "867652079971578",
+          "state": "live",
+          "cuType": "clm",
+          "model": "CANlink mobile 10000",
+          "datasource": "Hardware Proemion CANlink mobile 10000",
+          "sim": "8944477200003433928",
+          "installedAt": 1783551058281
+        }
+      ],
+      "model": {
+        "id": "c92c9660-7f04-4eb4-91f1-44be2124f7ca",
+        "name": "Favelle Favco Cranes Default Model"
+      }
+    },
+    {
+      "id": "354952",
+      "name": "General Crane - 1756",
+      "serial": "1756",
+      "pin": null,
+      "vin": null,
+      "organization": {
+        "id": "3313bc71-454c-4d34-8a48-4a032a45d24a",
+        "name": "General Cranes",
+        "type": "dealer"
+      },
+      "communicationUnits": [
+        {
+          "id": "868998087783953",
+          "name": "868998087783953",
+          "state": "live",
+          "cuType": "clm",
+          "model": "CANlink mobile 3600",
+          "datasource": "Hardware Proemion CANlink mobile 3600",
+          "sim": "8944477200003758712",
+          "installedAt": 1784681340331
+        }
+      ],
+      "model": {
+        "id": "4edd72e2-15eb-49ff-bc90-608bf5416cbd",
+        "name": "General Cranes 1756"
+      }
+    }
+  ]
+}

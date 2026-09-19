@@ -1,0 +1,154 @@
+key,label,type,unit,logicalType,machines
+value.ACS.State,ACS State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Anti-Cavitation.Pressure,Anti-Cavitation Pressure,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Boom.Angle,Boom Angle,numeric,predefined.unit.angle.DEGREE,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Boom.Angle.Sensor.State,Boom Angle Sensor State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.common.cu.sensors.temperature,Temperature CANlink mobile,numeric,predefined.unit.temperature.CELSIUS,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.common.cu.sim.traffic.month,SIM traffic this month modem,numeric,predefined.unit.datavolume.BYTE,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.common.engine.coolant.temperature,Engine coolant temperature,numeric,predefined.unit.temperature.CELSIUS,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.common.engine.fuel.used.total,Fuel consumption total,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.common.engine.hours.total,Engine operating hours total,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.common.engine.load.percent,Engine load in percent,numeric,predefined.unit.PERCENT,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.common.engine.speed,Engine speed,numeric,predefined.unit.rotation.RPM,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.common.machine.battery.potential,Battery potential,numeric,predefined.unit.voltage.VOLT,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.common.machine.ignitionswitch.state,Machine Ignition state,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Crane.Climbing.Activated,Crane Climbing Activated,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.custom.cu.sensors.acc.max,Acceleration - Max,numeric,predefined.unit.acceleration.G,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.custom.engine.oil.pressure,Engine oil pressure,numeric,predefined.unit.pressure.KILOPASCAL,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Emergency.Stop.Cabin,Emergency Stop Cabin,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Emergency.Stop.Winches,Emergency Stop Winches,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Emergency.Stop.X3.Control.Panel,Emergency Stop X3 Control Panel,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Engine.Fuel.Level.State,Engine Fuel Level State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Engine.fuel.rate,Engine fuel rate,numeric,predefined.unit.flow.LITER_PER_HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Engine.Running,Engine Running,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Engine.turbocharge.boost.pressure,Engine turbocharger boost pressure,numeric,predefined.unit.pressure.KILOPASCAL,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fire.Suppression.System.State,Fire Suppression System State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Brake.State,Fly Brake State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Down.Encoder.Limits,Fly Down Encoder Limits ,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Fly.Down.Motion,Fly Down Motion,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Fly.Down.Safety.System,Fly Down Safety System,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Fly.Encoder.Limits.Bypass,Fly Encoder Limit Bypass,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Lifts.with.a.Load._.100_.to._.110_.SWL,Fly Lifts with a Load > 100% to ≤ 110% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Lifts.with.a.Load._.110_.SWL,Fly Lifts with a Load > 110% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Lifts.with.a.Load._.20_.SWL,Fly Lifts with a Load ≤ 20% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Lifts.with.a.Load._.20_.to._.40_.SWL,Fly Lifts with a Load > 20% to ≤ 40% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Lifts.with.a.Load._.40_.to._.60_.SWL,Fly Lifts with a Load > 40% to ≤ 60% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Lifts.with.a.Load._.60_.to._.80_.SWL,Fly Lifts with a Load > 60% to ≤ 80% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Lifts.with.a.Load._.80_.to._.100_.SWL,Fly Lifts with a Load > 80% to ≤ 100% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Load.Value,Fly Load Value,numeric,predefined.unit.mass.METRIC_TON,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Safe.Working.Load,Fly Safe Working Load,numeric,predefined.unit.mass.METRIC_TON,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Sensor.State,Fly Sensor State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Fly.Up.Encoder.Limits,Fly Up Encoder Limits,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Fly.Up.Motion,Fly Up Motion,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Fly.Up.Safety.System,Fly Up Safety System,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Fly.Up.Ultimate.Limit,Fly Up Ultimate Limit,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Fly.Up.Ultimate.Limit.Bypass,Fly Up Ultimate Limit Bypass,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Fly.Winch.Revolutions,Fly Winch Revolutions,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Fly.Winch.Run.Time,Fly Winch Run Time,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Gearbox.Oil.Temperature,Gearbox Oil Temperature,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.General.Ultimate.Limit,General Ultimate Limit,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744
+value.Hoist_Fly.Winch.Selected,Hoist/Fly Winch Selected,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Brake.State,Hoist Brake State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Down.Encoder.Limits,Hoist Down Encoder Limits,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Down.Limits,Hoist Down Limits,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744
+value.Hoist.Down.Motion,Hoist Down Motion,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Down.Safety.System,Hoist Down Safety System,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Encoder.Limits.Bypass,Hoist Encoder Limit Bypass,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Lifts.with.a.Load._.100_.to._.110_.SWL,Hoist Lifts with a Load > 100% to ≤ 110% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Lifts.with.a.Load._.110_.SWL,Hoist Lifts with a Load > 110% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Lifts.with.a.Load._.20_.SWL,Hoist Lifts with a Load ≤ 20% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Lifts.with.a.Load._.20_.to._.40_.SWL,Hoist Lifts with a Load > 20% to ≤ 40% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Lifts.with.a.Load._.40_.to._.60_.SWL,Hoist Lifts with a Load > 40% to ≤ 60% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Lifts.with.a.Load._.60_.to._.80_.SWL,Hoist Lifts with a Load > 60% to ≤ 80% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Lifts.with.a.Load._.80_.to._.100_.SWL,Hoist Lifts with a Load > 80% to ≤ 100% SWL,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Load,Hoist Load,numeric,predefined.unit.mass.METRIC_TON,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Safe.Working.Load,Hoist Safe Working Load,numeric,predefined.unit.mass.METRIC_TON,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Sensor.State,Hoist Sensor State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hoist.Up.Encoder.Limits,Hoist Up Encoder Limits,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Up.Limits,Hoist Up Limits,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744
+value.Hoist.Up.Motion,Hoist Up Motion,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Up.Safety.System,Hoist Up Safety System ,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Up.Ultimate.Limit,Hoist Up Ultimate Limit,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Up.Ultimate.Limit.Bypass,Hoist Up Ultimate Limit Bypass,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Winch.Revolutions,Hoist Winch Revolutions,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Hoist.Winch.Run.Time,Hoist Winch Run Time,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hydraulic.Buffers.Proximity.Switches.Bypass,Hydraulic Buffers Proximity Switches Bypass,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hydraulic.Oil.Filters.State,Hydraulic Oil Filters State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hydraulic.Oil.Level,Hydraulic Oil Level,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Hydraulic.Oil.Temperature,Hydraulic Oil Temperature,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Anti-Collision.System.Bypass.Time,Index Anti-Collision System Bypass Time,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Anti-Collision.System.Bypasses,Index Anti-Collision System Bypasses,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Fly.Lifting.with.a.Load._.100_.to._.110_.SWL,Index Fly Lifting with a Load > 100% to ≤ 110% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Fly.Lifting.with.a.Load._.110_.SWL,Index Fly Lifting with a Load > 110% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Fly.Lifting.with.a.Load._.20_.SWL,Index Fly Lifting with a Load ≤ 20% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Fly.Lifting.with.a.Load._.20_.to._.40_.SWL,Index Fly Lifting with a Load > 20% to ≤ 40% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Fly.Lifting.with.a.Load._.40_.to._.60_.SWL,Index Fly Lifting with a Load > 40% to ≤ 60% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Fly.Lifting.with.a.Load._.60_.to._.80_.SWL,Index Fly Lifting with a Load > 60% to ≤ 80% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Fly.Lifting.with.a.Load._.80_.to._.100_.SWL,Index Fly Lifting with a Load > 80% to ≤ 100% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Hoist.Lifting.with.a.Load._.100_.to._.110_.SWL,Index Hoist Lifting with a Load > 100% to ≤ 110% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Hoist.Lifting.with.a.Load._.110_.SWL,Index Hoist Lifting with a Load > 110% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Hoist.Lifting.with.a.Load._.20_.SWL,Index Hoist Lifting with a Load ≤ 20% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Hoist.Lifting.with.a.Load._.20_.to._.40_.SWL,Index Hoist Lifting with a Load > 20% to ≤ 40% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Hoist.Lifting.with.a.Load._.40_.to._.60_.SWL,Index Hoist Lifting with a Load > 40% to ≤ 60% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Hoist.Lifting.with.a.Load._.60_.to._.80_.SWL,Index Hoist Lifting with a Load > 60% to ≤ 80% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Hoist.Lifting.with.a.Load._.80_.to._.100_.SWL,Index Hoist Lifting with a Load > 80% to ≤ 100% SWL,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.SLI.System.Bypass.Time,Index SLI System Bypass Time,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.SLI.System.Bypasses,Index SLI System Bypasses,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Time.at.Engine.Speed._.Idle.and.No.Load,Index Time at Engine Speed ≤ Idle and No Load,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Time.at.Engine.Speed.Greater.Than.Idle.and.No.Load,Index Time at Engine Speed > Idle and No Load,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Engine.Speed._.Idle.and.No.Load,Index Used Fuel at Engine Speed ≤ Idle and No Load,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Engine.Speed.Greater.Than.Idle.and.No.Load,Index Used Fuel at Engine Speed > Idle and No Load,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Fly.Load._.100_.to._.110_.SWL,Index Used Fuel at Fly Load > 100% to ≤ 110% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Fly.Load._.110_.SWL,Index Used Fuel at Fly Load > 110% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Fly.Load._.20_.SWL,Index Used Fuel at Fly Load ≤ 20% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Fly.Load._.20_.to._.40_.SWL,Index Used Fuel at Fly Load > 20% to ≤ 40% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Fly.Load._.40_.to._.60_.SWL,Index Used Fuel at Fly Load > 40% to ≤ 60% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Fly.Load._.60_.to._.80_.SWL,Index Used Fuel at Fly Load > 60% to ≤ 80% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Fly.Load._.80_.to._.100_.SWL,Index Used Fuel at Fly Load > 80% to ≤ 100% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Hoist.Load._.100_.to._.110_.SWL,Index Used Fuel at Hoist Load > 100% to ≤ 110% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Hoist.Load._.110_.SWL,Index Used Fuel at Hoist Load > 110% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Hoist.Load._.20_.SWL,Index Used Fuel at Hoist Load ≤ 20% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Hoist.Load._.20_.to._.40_.SWL,Index Used Fuel at Hoist Load > 20% to ≤ 40% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Hoist.Load._.40_.to._.60_.SWL,Index Used Fuel at Hoist Load > 40% to ≤ 60% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Hoist.Load._.60_.to._.80_.SWL,Index Used Fuel at Hoist Load > 60% to ≤ 80% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Index.Used.Fuel.at.Hoist.Load._.80_.to._.100_.SWL,Index Used Fuel at Hoist Load > 80% to ≤ 100% SWL,numeric,predefined.unit.volume.LITER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Luff.Brake.State,Luff Brake State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Luff.Encoder.Limits.Bypass,Luff Encoder Limit Bypass,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.In.Encoder.Limits,Luff In Encoder Limits,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.In.Limits,Luff In Limits,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744
+value.Luff.In.Motion,Luff In Motion,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.In.Safety.System,Luff In Safety System,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.In.Ultimate.Limit,Luff In Ultimate Limit,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.Out.Encoder.Limits,Luff Out Encoder Limits,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.Out.Limits,Luff Out Limits,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744
+value.Luff.Out.Motion,Luff Out Motion,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.Out.Safety.System,Luff Out Safety System,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.Out.Ultimate.Limit,Luff Out Ultimate Limit,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.Ratchet,Luff Ratchet,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Luff.Ultimate.Limits.Bypass,Luff Ultimate Limit Bypass,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.Winch.Revolutions,Luff Winch Revolutions,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Luff.Winch.Run.Time,Luff Winch Run Time,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Modem_Data_Transfer_Mode,Modem Data Transfer Mode,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Port.Hydraulic.Buffer.Proximity.Switch,Port Hydraulic Buffer Proximity Switch,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Safety.System.Fly.Down.Motion.Stop.Bypass,Safety System Fly Down Motion Stop Bypass,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Safety.System.Hoist.Down.Motion.Stop.Bypass,Safety System Hoist Down Motion Stop Bypass,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Safety.System.Luff.Out.Motion.Stop.Bypass,Safety System Luff Out Motion Stop Bypass,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Sent.16.Bit.Messages,Sent 16 Bit Messages,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744;335810
+value.Sent.32.Bit.Messages,Sent 32 Bit Messages,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744;335810
+value.Sent.48.Bit.Messages,Sent 48 Bit Messages,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744;335810
+value.Sent.8.Bit.Messages,Sent 8 Bit Messages,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744;335810
+value.Slack.Rope,Slack Rope,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Slew.Brake.State,Slew Brake State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Slew.Left.Motion,Slew Left Motion,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Slew.Lock.Proximity.Switches.Bypass,Slew Lock Proximity Switches Bypass,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Slew.Pin.Locked,Slew Pin Locked,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Slew.Pin.Unlocked,Slew Pin Unlocked,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Slew.Right.Motion,Slew Right Motion,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Slew.Ring.Revolutions,Slew Ring Revolutions,numeric,predefined.unit.NUMBER,counter:increasing,271515;287729;294854;309043;335810;354952
+value.Slew.Ring.Run.Time,Slew Ring Run Time,numeric,predefined.unit.time.HOUR,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.SLI.Bypass.State,SLI Bypass State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.SLI.Communication.State,SLI Communication State,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.SLI.Motion.Cut,SLI Motion Cut,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.Starboard.Hydraulic.Buffer.Proximity.Switch,Starboard Hydraulic Buffer Proximity Switch,numeric,predefined.unit.NUMBER,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
+value.System.Ignition.State,System Ignition State,numeric,predefined.unit.NUMBER,counter:increasing,209233;287743;287744
+value.Wind.Speed,Wind Speed,numeric,predefined.unit.speed.METERS_PER_SECOND,counter:increasing,209233;271515;287729;287743;287744;294854;309043;335810;354952
