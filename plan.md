@@ -129,15 +129,90 @@ private async ensureValidAccessToken(): Promise<string> {
 
 ### Bucket alignment
 
-Buckets anchor at `from`. Unaligned `from` → shifted timestamps → duplicates, jagged graphs, unsafe re-fetch.
+Proemion returns 0 or 1 points per bucket. Buckets are half-open
+`[from + k*bucketSize, from + (k+1)*bucketSize)` — `from` anchors the grid.
+Two requests with different `from` put the same raw readings into different
+buckets, under different timestamps.
 
-Rule: `from`/`to` = floor(epochMs / bucketMs) * bucketMs. Grid-aligned, re-fetch byte-identical.
+Example: `bucketSize=60000`, tick 1 `from=12:00:37.123` → buckets `:37`,
+`:37+60s`, … Tick 2 `from=12:05:00.000` → buckets `:00`, `:01`, …
+Same event lands twice at different times in InfluxDB. Result: duplicate
+series, stair-steps at poll boundaries, re-fetch never byte-identical.
+
+Rules:
+
+- Integer ms `bucketSize` only. Never ISO period strings (`P1D` needs
+  `timeZone`, DST shifts boundaries, not re-fetch stable).
+- Grid anchored at epoch 0: `alignDown(t) = floor(t / bucketMs) * bucketMs`.
+  Deterministic across restarts, processes, backfills. For `bucketMs`
+  dividing 60s (60s, 300s, …) this equals wall-clock alignment (`:00`).
+- Align both bounds. `to` exclusive, `from` inclusive.
+- Never query the in-progress bucket:
+  `to = alignDown(now)`, `from = alignDown(now - spanMs - overlapMs)`.
+  Derive both from a single `now = Date.now()` per tick (no skew).
+- Steady-state size trivially under caps: e.g. 5min span + 2min overlap at
+  60s buckets = 7 buckets (spec: keep < 100 for perf, hard cap 25000;
+  backfill chunks to ≤ 1000, see below).
+- `src/window.ts` is pure math, no I/O, no `Date.now()` inside:
+  `alignDown(t, bucketMs)`, `alignedWindow(now, bucketMs, spanMs,
+  overlapBuckets) → {from, to}`. Tests: `from % bucket == 0`,
+  `to % bucket == 0`, `to - from == span + overlap`, idempotent
+  `alignDown(alignDown(t)) == alignDown(t)`, unaligned `now` still lands
+  on grid.
 
 ### Idempotency / backfill / overlap
 
-InfluxDB upserts on same timestamp + tags + field. Safe to re-write.
+InfluxDB upserts: same measurement + tagset + timestamp + field key
+overwrites, never duplicates. Identity here:
 
-Each poll overlaps 1–2 buckets to catch late data. Backfill = same path pointed at past range.
+- measurement `signal`, tags
+  `{machine_id, machine_name, signal_key, unit}`, timestamp = Proemion
+  `time * 1e6` (ns, exact, never client `now`), field `value` always float.
+
+Re-write same window → same state. Collector is at-least-once by design:
+crash between Proemion fetch and Influx write just re-fetches next tick.
+
+Conditions to keep it true:
+
+- Tags stable. `machine_name` is denormalized: a rename forks a new series,
+  old points orphan (accepted, documented). Never put volatile data in tags.
+- Field type stable: always write `value` as float, one field only.
+- Timestamp exact: `ms * 1e6`, no rounding, no re-alignment on write.
+  Alignment applies to request `from`/`to` only, never to returned `time`.
+
+Overlap (late data):
+
+- Why: machines buffer offline (cellular gaps), Proemion aggregation lands
+  late, and the previous tick's trailing bucket was partial when read.
+- Each tick re-fetches `overlapBuckets` (default 2, config `overlapBuckets`)
+  before the last successful `to`: `nextFrom = lastTo - overlap*bucketMs`.
+  First tick (no state): `from = alignDown(now - span - overlap)`.
+  Cost: 2 extra buckets × 1201 series — negligible. Benefit: late points
+  self-heal, partial trailing bucket converges to full average on next tick
+  with no special-case code.
+
+Backfill (same path, past range):
+
+- Same `fetch → points → write` code as live poll, only `from`/`to` differ.
+  Uses: initial history, downtime gap wider than overlap, new signal added
+  to allowlist needing history.
+- CLI `backfill <fromISO> <toISO>`: align both bounds down to grid, split
+  into chunks of ≤ 1000 buckets (well under 25000-bucket cap and
+  `limit:10000` per series), sequential chunks overlapping 1 bucket so no
+  boundary loss. Each chunk fans out to ≤ 350 queries/request (4 requests
+  per chunk at current 1201 series). Re-runnable: same input range → same
+  points (grid + upsert), safe to resume by re-running the full range.
+- `limit` guard: send `limit:10000`; after each response, if
+  `totalDatapoints > timeseries.length`, the range was truncated (only
+  possible with `raw`) → abort loudly, never silently store a gap. With
+  aggregation this never fires; the check stays as invariant.
+
+Failure semantics:
+
+- Proemion 5xx or Influx write fail → log, do not advance `lastTo`, retry
+  next tick with same overlap. Gap closes automatically.
+- Never advance `lastTo` past an unwritten range. No gaps by construction,
+  duplicates by design but harmless (upsert).
 
 ### Files (`collector/`)
 
