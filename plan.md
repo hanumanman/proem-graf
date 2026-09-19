@@ -33,8 +33,8 @@ Collector: cache token in memory, refresh 60s early. Creds from `PROEMION_CLIENT
 
 ### Machines / signals
 
-- `GET /machines` → top-level JSON array. If `limit` passed, `offset` required else HTTP 400.
-- `GET /machines/{id}/signals` → `{key, label, type, unit, logicalType}`. `key` is ingest identifier. Also `GET /signals` global.
+- `GET /machines` → top-level JSON array: `id` (the `groupBy.id` in timeseries), `name`, `serial`, `vin`, `pin`, `organization`. Pagination `limit`/`offset`; `limit` without `offset` → HTTP 400. `GET /machines/count` → total.
+- `GET /machines/{id}/signals` → `{key, label, type: numeric|string|null, format, minValue, maxValue, unit{key,label}, logicalType{counter|stateSignal}}`. `key` is ingest identifier. Also `GET /signals` global (no per-machine mapping).
 - Output builds signal allowlist.
 
 ### POST /timeseries
@@ -58,9 +58,9 @@ Request:
 ```
 
 - `from`/`to`: epoch ms.
-- `bucketSize`: ms integer. ISO period strings (e.g. `P1D`) require `timeZone` — avoid, use ms.
+- `bucketSize`: ms integer. ISO period strings (e.g. `P1D`) require `timeZone` — avoid, use ms. Max 25000 buckets between `from`/`to`.
 - `limit`: max points per series. True total in `totalDatapoints`.
-- `queries`: one entry per machine per signal. Max 350/request. `aggregationFunction`: `average|max|min|sum|std|raw|delta`. `groupBy`: `{type:"machine", id}`. We use machine-scope only.
+- `queries`: one entry per machine per signal. Max 350/request. `aggregationFunction`: `average|max|min|sum|std|raw|delta|count|avg_serial_diff|cumulative_sum`. `groupBy`: `{type:"machine", id}` (`id` = machine `id` from `/machines`). We use machine-scope only.
 
 Response: array, one element per query:
 
@@ -82,9 +82,9 @@ Response: array, one element per query:
 
 `timeseries[].{time,value}` is stored payload. `time` epoch ms.
 
-## 2. Collector (TypeScript, Node 26)
+## 2. Collector (TypeScript, Bun 1.2)
 
-No build step (type stripping). Deps: `@influxdata/influxdb3-client`, `yaml`, `typescript`, `vitest`, `effect` (phase 3b).
+No build step (Bun runs TS directly). Deps: `@influxdata/influxdb3-client`, `yaml`, `effect` (phase 3b). Test runner: `bun test`. `.env` lives at repo root; Bun loads cwd-only, so scripts run with `--env-file=../.env`.
 
 ### Loop (every tick)
 
@@ -362,7 +362,7 @@ ORDER BY 1
 
 `date_bin` = query-time downsampling. `$__timeFilter` = Grafana macro for dashboard range. `GROUP BY 1,2` = one line per machine.
 
-SQL in Grafana uses FlightSQL/gRPC → needs HTTP/2 + Grafana 12.2+. OK for local Docker (direct container link).
+SQL in Grafana uses FlightSQL/gRPC → needs HTTP/2 + Grafana 12.2+. Running 13.2.1 — OK for local Docker (direct container link).
 
 ## 4. Grafana
 
@@ -407,15 +407,15 @@ Services: `influxdb3-core` (:8181), `grafana` (:3000), `collector`. Shared netwo
 
 ## 6. Phases
 
-### Phase 1 — Stand up stack
+### Phase 1 — Stand up stack ✅
 
-`compose.yaml`, `.env.example`, `.gitignore`. Pin image versions (`latest` flips to 3 Core Sep 15, 2026). Start InfluxDB on localhost → operator token → create `proemion` DB → start Grafana → provision datasource.
+`compose.yaml`, `.env.example`, `.gitignore`. Pins: `influxdb:3.11.2-core` (Docker `latest` now tracks 3 Core since Sep 15), `grafana/grafana:13.2.1` (note: `grafana-oss` repo stopped at 13.0.2). InfluxDB bound `127.0.0.1:8181`, operator token via `docker exec … influxdb3 create token --admin`, DB `proemion`, Grafana provisions SQL datasource (FlightSQL, `insecureGrpc`). Write endpoint: `/api/v3/write_lp?db=proemion`.
 
-Verify: manual `curl` line-protocol write, SQL read-back.
+Verify: curl write + SQL read-back ✅, datasource health ✅.
 
 ### Phase 2 — Discovery
 
-Auth + machine/signal listing. Emit `discovery/machines.json`, `discovery/signals.csv` (key,label,type,unit,logicalType,machines).
+Auth + machine/signal listing via `bun run discover` (`collector/src/discover.ts`, one-off). Paginate `/machines`, per-machine `/signals`. Emit `discovery/machines.json`, `discovery/signals.csv` (key,label,type,unit,logicalType,machines).
 
 Verify: review CSV, pick ingest signals.
 
@@ -457,7 +457,7 @@ Verify: full restart, zero manual steps.
 
 ## 8. Decisions
 
-Resolved: InfluxDB 3 Core + SQL; TS Node 26 no build; Effect gradual (plain first); machine IDs + signal scope via phase-2 discovery.
+Resolved: InfluxDB 3 Core + SQL; TS on Bun, no build; Effect gradual (plain first); machine IDs + signal scope via phase-2 discovery.
 
 Open: alert destination (phase 5).
 
