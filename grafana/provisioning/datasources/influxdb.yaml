@@ -1,0 +1,13 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB-Proemion
+    type: influxdb
+    access: proxy
+    url: http://influxdb3-core:8181
+    jsonData:
+      version: SQL
+      dbName: proemion
+      insecureGrpc: true
+    secureJsonData:
+      token: ${INFLUX_ADMIN_TOKEN}
