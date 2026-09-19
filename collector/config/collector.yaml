@@ -1,0 +1,181 @@
+# Collector poll configuration.
+# Allowlist derived from discovery/signals.csv.
+pollIntervalSeconds: 60
+bucketSizeSeconds: 60
+overlapBuckets: 1
+aggregationFunction: average
+
+machines:
+  - id: "209233"
+    name: "TCA - 2561 - Jed"
+  - id: "271515"
+    name: "Resolution Rigging - 2632"
+  - id: "287729"
+    name: "Marr Contracting - 2660"
+  - id: "287743"
+    name: "TCB - 2615 - Jed"
+  - id: "287744"
+    name: "TCC - 2616 - Jed"
+  - id: "294854"
+    name: "General Cranes - 1532"
+  - id: "309043"
+    name: "Resolution Rigging - 2614 - Reserved"
+  - id: "335810"
+    name: "CANlink 10000"
+  - id: "354952"
+    name: "General Crane - 1756"
+
+signals:
+  - value.ACS.State
+  - value.Anti-Cavitation.Pressure
+  - value.Boom.Angle
+  - value.Boom.Angle.Sensor.State
+  - value.common.cu.sensors.temperature
+  - value.common.cu.sim.traffic.month
+  - value.common.engine.coolant.temperature
+  - value.common.engine.fuel.used.total
+  - value.common.engine.hours.total
+  - value.common.engine.load.percent
+  - value.common.engine.speed
+  - value.common.machine.battery.potential
+  - value.common.machine.ignitionswitch.state
+  - value.Crane.Climbing.Activated
+  - value.custom.cu.sensors.acc.max
+  - value.custom.engine.oil.pressure
+  - value.Emergency.Stop.Cabin
+  - value.Emergency.Stop.Winches
+  - value.Emergency.Stop.X3.Control.Panel
+  - value.Engine.Fuel.Level.State
+  - value.Engine.fuel.rate
+  - value.Engine.Running
+  - value.Engine.turbocharge.boost.pressure
+  - value.Fire.Suppression.System.State
+  - value.Fly.Brake.State
+  - value.Fly.Down.Encoder.Limits
+  - value.Fly.Down.Motion
+  - value.Fly.Down.Safety.System
+  - value.Fly.Encoder.Limits.Bypass
+  - value.Fly.Lifts.with.a.Load._.100_.to._.110_.SWL
+  - value.Fly.Lifts.with.a.Load._.110_.SWL
+  - value.Fly.Lifts.with.a.Load._.20_.SWL
+  - value.Fly.Lifts.with.a.Load._.20_.to._.40_.SWL
+  - value.Fly.Lifts.with.a.Load._.40_.to._.60_.SWL
+  - value.Fly.Lifts.with.a.Load._.60_.to._.80_.SWL
+  - value.Fly.Lifts.with.a.Load._.80_.to._.100_.SWL
+  - value.Fly.Load.Value
+  - value.Fly.Safe.Working.Load
+  - value.Fly.Sensor.State
+  - value.Fly.Up.Encoder.Limits
+  - value.Fly.Up.Motion
+  - value.Fly.Up.Safety.System
+  - value.Fly.Up.Ultimate.Limit
+  - value.Fly.Up.Ultimate.Limit.Bypass
+  - value.Fly.Winch.Revolutions
+  - value.Fly.Winch.Run.Time
+  - value.Gearbox.Oil.Temperature
+  - value.General.Ultimate.Limit
+  - value.Hoist_Fly.Winch.Selected
+  - value.Hoist.Brake.State
+  - value.Hoist.Down.Encoder.Limits
+  - value.Hoist.Down.Limits
+  - value.Hoist.Down.Motion
+  - value.Hoist.Down.Safety.System
+  - value.Hoist.Encoder.Limits.Bypass
+  - value.Hoist.Lifts.with.a.Load._.100_.to._.110_.SWL
+  - value.Hoist.Lifts.with.a.Load._.110_.SWL
+  - value.Hoist.Lifts.with.a.Load._.20_.SWL
+  - value.Hoist.Lifts.with.a.Load._.20_.to._.40_.SWL
+  - value.Hoist.Lifts.with.a.Load._.40_.to._.60_.SWL
+  - value.Hoist.Lifts.with.a.Load._.60_.to._.80_.SWL
+  - value.Hoist.Lifts.with.a.Load._.80_.to._.100_.SWL
+  - value.Hoist.Load
+  - value.Hoist.Safe.Working.Load
+  - value.Hoist.Sensor.State
+  - value.Hoist.Up.Encoder.Limits
+  - value.Hoist.Up.Limits
+  - value.Hoist.Up.Motion
+  - value.Hoist.Up.Safety.System
+  - value.Hoist.Up.Ultimate.Limit
+  - value.Hoist.Up.Ultimate.Limit.Bypass
+  - value.Hoist.Winch.Revolutions
+  - value.Hoist.Winch.Run.Time
+  - value.Hydraulic.Buffers.Proximity.Switches.Bypass
+  - value.Hydraulic.Oil.Filters.State
+  - value.Hydraulic.Oil.Level
+  - value.Hydraulic.Oil.Temperature
+  - value.Index.Anti-Collision.System.Bypass.Time
+  - value.Index.Anti-Collision.System.Bypasses
+  - value.Index.Fly.Lifting.with.a.Load._.100_.to._.110_.SWL
+  - value.Index.Fly.Lifting.with.a.Load._.110_.SWL
+  - value.Index.Fly.Lifting.with.a.Load._.20_.SWL
+  - value.Index.Fly.Lifting.with.a.Load._.20_.to._.40_.SWL
+  - value.Index.Fly.Lifting.with.a.Load._.40_.to._.60_.SWL
+  - value.Index.Fly.Lifting.with.a.Load._.60_.to._.80_.SWL
+  - value.Index.Fly.Lifting.with.a.Load._.80_.to._.100_.SWL
+  - value.Index.Hoist.Lifting.with.a.Load._.100_.to._.110_.SWL
+  - value.Index.Hoist.Lifting.with.a.Load._.110_.SWL
+  - value.Index.Hoist.Lifting.with.a.Load._.20_.SWL
+  - value.Index.Hoist.Lifting.with.a.Load._.20_.to._.40_.SWL
+  - value.Index.Hoist.Lifting.with.a.Load._.40_.to._.60_.SWL
+  - value.Index.Hoist.Lifting.with.a.Load._.60_.to._.80_.SWL
+  - value.Index.Hoist.Lifting.with.a.Load._.80_.to._.100_.SWL
+  - value.Index.SLI.System.Bypass.Time
+  - value.Index.SLI.System.Bypasses
+  - value.Index.Time.at.Engine.Speed._.Idle.and.No.Load
+  - value.Index.Time.at.Engine.Speed.Greater.Than.Idle.and.No.Load
+  - value.Index.Used.Fuel.at.Engine.Speed._.Idle.and.No.Load
+  - value.Index.Used.Fuel.at.Engine.Speed.Greater.Than.Idle.and.No.Load
+  - value.Index.Used.Fuel.at.Fly.Load._.100_.to._.110_.SWL
+  - value.Index.Used.Fuel.at.Fly.Load._.110_.SWL
+  - value.Index.Used.Fuel.at.Fly.Load._.20_.SWL
+  - value.Index.Used.Fuel.at.Fly.Load._.20_.to._.40_.SWL
+  - value.Index.Used.Fuel.at.Fly.Load._.40_.to._.60_.SWL
+  - value.Index.Used.Fuel.at.Fly.Load._.60_.to._.80_.SWL
+  - value.Index.Used.Fuel.at.Fly.Load._.80_.to._.100_.SWL
+  - value.Index.Used.Fuel.at.Hoist.Load._.100_.to._.110_.SWL
+  - value.Index.Used.Fuel.at.Hoist.Load._.110_.SWL
+  - value.Index.Used.Fuel.at.Hoist.Load._.20_.SWL
+  - value.Index.Used.Fuel.at.Hoist.Load._.20_.to._.40_.SWL
+  - value.Index.Used.Fuel.at.Hoist.Load._.40_.to._.60_.SWL
+  - value.Index.Used.Fuel.at.Hoist.Load._.60_.to._.80_.SWL
+  - value.Index.Used.Fuel.at.Hoist.Load._.80_.to._.100_.SWL
+  - value.Luff.Brake.State
+  - value.Luff.Encoder.Limits.Bypass
+  - value.Luff.In.Encoder.Limits
+  - value.Luff.In.Limits
+  - value.Luff.In.Motion
+  - value.Luff.In.Safety.System
+  - value.Luff.In.Ultimate.Limit
+  - value.Luff.Out.Encoder.Limits
+  - value.Luff.Out.Limits
+  - value.Luff.Out.Motion
+  - value.Luff.Out.Safety.System
+  - value.Luff.Out.Ultimate.Limit
+  - value.Luff.Ratchet
+  - value.Luff.Ultimate.Limits.Bypass
+  - value.Luff.Winch.Revolutions
+  - value.Luff.Winch.Run.Time
+  - value.Modem_Data_Transfer_Mode
+  - value.Port.Hydraulic.Buffer.Proximity.Switch
+  - value.Safety.System.Fly.Down.Motion.Stop.Bypass
+  - value.Safety.System.Hoist.Down.Motion.Stop.Bypass
+  - value.Safety.System.Luff.Out.Motion.Stop.Bypass
+  - value.Sent.16.Bit.Messages
+  - value.Sent.32.Bit.Messages
+  - value.Sent.48.Bit.Messages
+  - value.Sent.8.Bit.Messages
+  - value.Slack.Rope
+  - value.Slew.Brake.State
+  - value.Slew.Left.Motion
+  - value.Slew.Lock.Proximity.Switches.Bypass
+  - value.Slew.Pin.Locked
+  - value.Slew.Pin.Unlocked
+  - value.Slew.Right.Motion
+  - value.Slew.Ring.Revolutions
+  - value.Slew.Ring.Run.Time
+  - value.SLI.Bypass.State
+  - value.SLI.Communication.State
+  - value.SLI.Motion.Cut
+  - value.Starboard.Hydraulic.Buffer.Proximity.Switch
+  - value.System.Ignition.State
+  - value.Wind.Speed

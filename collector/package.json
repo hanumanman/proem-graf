@@ -3,12 +3,20 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "discover": "bun src/discover.ts"
+    "discover": "bun src/discover.ts",
+    "start": "bun src/main.ts",
+    "dry-run": "bun src/main.ts --dry-run",
+    "backfill": "bun src/main.ts backfill",
+    "test": "bun test"
   },
   "devDependencies": {
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@influxdata/influxdb3-client": "^2.4.0",
+    "yaml": "^2.9.1"
   }
 }
