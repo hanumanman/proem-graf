@@ -84,7 +84,7 @@ Response: array, one element per query:
 
 ## 2. Collector (TypeScript, Bun 1.2)
 
-No build step (Bun runs TS directly). Installed deps: `@types/bun` only; `@influxdata/influxdb3-client` + `yaml` land in phase 3a, `effect` in phase 3b. Test runner: `bun test`. Bun only auto-loads a cwd `.env`; root `.env` reaches the process via `bunfig.toml` preload (`src/load-dot-env.ts`), so no `--env-file` flag is needed.
+No build step (Bun runs TS directly). Installed deps: `@types/bun` only; `@influxdata/influxdb3-client` + `yaml` land in phase 3, `effect` in phase 7 (only when things work, if time remains). Test runner: `bun test`. Bun only auto-loads a cwd `.env`; root `.env` reaches the process via `bunfig.toml` preload (`src/load-dot-env.ts`), so no `--env-file` flag is needed.
 
 ### Loop (every tick)
 
@@ -103,7 +103,7 @@ Types: `Organization`, `Machine`, `SignalType`, `SignalUnit`, `LogicalType`, `Si
 
 Implemented: private `ensureValidAccessToken()` (cache, refresh 60s early) and `fetchJson<T>(path)` (Bearer GET, throw on non-2xx); public `fetchMachineCount()`, `fetchMachines(limit, offset)`, `fetchMachineSignals(machineId)`.
 
-`timeseries(from, to, bucketSize, queries)` lands in phase 3a.
+`timeseries(from, to, bucketSize, queries)` lands in phase 3.
 
 ```ts
 private async ensureValidAccessToken(): Promise<string> {
@@ -216,15 +216,15 @@ Failure semantics:
 
 ### Files (`collector/`)
 
-- `src/config.ts` — env + `config/collector.yaml` (machines, allowlist, interval, aggregation/signal). Phase 3a.
-- `src/proemion.ts` ✅ — token cache + machine/signal listing; `/timeseries` in phase 3a.
-- `src/window.ts` — pure alignment math, no I/O. Phase 3a.
-- `src/points.ts` — series → point (tags, escaping, ns timestamp). Phase 3a.
-- `src/influx.ts` — writes via `@influxdata/influxdb3-client` Point API. Phase 3a.
-- `src/main.ts` — loop + `backfill`, `--dry-run`. Phase 3a.
+- `src/config.ts` ✅ — env + `config/collector.yaml` (machines, allowlist, interval, aggregation, bucket, overlap).
+- `src/proemion.ts` ✅ — token cache + machine/signal listing + `/timeseries`.
+- `src/window.ts` ✅ — pure alignment math, no I/O.
+- `src/points.ts` ✅ — series → line protocol (tags, escaping, ns timestamp).
+- `src/influx.ts` ✅ — writes line protocol via `@influxdata/influxdb3-client` (`useV2Api: false`, Bearer).
+- `src/main.ts` ✅ — loop + `backfill <from> <to>`, `--dry-run`.
 - `src/discover.ts` ✅ — phase 2 one-off.
 - `src/load-dot-env.ts` ✅ — preload; loads repo-root `.env` (wired in `bunfig.toml`).
-- `test/` — alignment + point building. Phase 3a.
+- `test/` ✅ — alignment + point building.
 
 `--dry-run`: print line protocol, no write.
 
@@ -236,9 +236,150 @@ signal,machine_id=209233,machine_name=CANlink\ 10000,signal_key=value.Anti-Cavit
 
 `signal` = table. Tags: `machine_id,machine_name,signal_key,unit`. Field: `value`. Timestamp: ns (ms × 1e6). Escape spaces/commas/`=` in tag values. `machine_id` is the numeric `id` string from `/machines`; `unit` is the signal's `unit.key`.
 
-### Effect migration (phase 3b)
+### Effect migration (phase 7, deferred)
 
-Pure logic (`window.ts`, escaping) stays plain forever. Effect only for I/O, typed errors, scheduling, wiring. Unwrap only at edge via `runPromise`, never inside Effect.
+Deferred until pipeline works and time remains. Pure logic (`window.ts`, escaping) stays plain forever. Effect only for I/O, typed errors, scheduling, wiring. Details live under Phase 7 below.
+
+## 3. InfluxDB 3 Core
+
+Port **8181** (8086 = v2). Docker. DB: `proemion` (created explicitly).
+
+Tags indexed, fields not. `machine_id`/`signal_key` must be tags.
+
+### Schema — table `signal` (numeric)
+
+| Part      | Name           | Example                      |
+| --------- | -------------- | ---------------------------- |
+| tag       | `machine_id`   | `ABC-1234`                   |
+| tag       | `machine_name` | `Excavator 1` (denormalized) |
+| tag       | `signal_key`   | `value.clamp.30.voltage`     |
+| tag       | `unit`         | `V`                          |
+| field     | `value`        | `13.8`                       |
+| timestamp | `time`         | ns                           |
+
+Second table `signal_state` for string/state signals only if discovery justifies. Numeric first.
+
+Line protocol: escape spaces/commas/`=` in tag values. Send ns explicitly.
+
+### Auth
+
+First start: admin endpoint unauthenticated until operator token created. Bind to `127.0.0.1` during bootstrap. Create operator token via CLI → `.env`. Use operator token for collector writes + Grafana reads initially; split to read/write-scoped tokens in phase 6.
+
+### Retention
+
+Set at DB creation, **immutable** in Core. Default infinite. Min `1h`. Start infinite (7 machines = tiny volume). To change: create new DB + repoint, or Enterprise.
+
+### Query (SQL via DataFusion; no Flux — deprecated)
+
+```sql
+SELECT
+  date_bin(INTERVAL '1 minute', time) AS time,
+  machine_name,
+  avg(value) AS value
+FROM signal
+WHERE $__timeFilter(time)
+  AND signal_key = 'value.clamp.30.voltage'
+GROUP BY 1, 2
+ORDER BY 1
+```
+
+`date_bin` = query-time downsampling. `$__timeFilter` = Grafana macro for dashboard range. `GROUP BY 1,2` = one line per machine.
+
+SQL in Grafana uses FlightSQL/gRPC → needs HTTP/2 + Grafana 12.2+. Running 13.2.1 — OK for local Docker (direct container link).
+
+## 4. Grafana
+
+### Datasource (provisioned YAML)
+
+```yaml
+apiVersion: 1
+datasources:
+  - name: InfluxDB-Proemion
+    type: influxdb
+    access: proxy
+    url: http://influxdb3-core:8181
+    jsonData:
+      version: SQL
+      dbName: proemion
+      insecureGrpc: true # no TLS locally
+    secureJsonData:
+      token: ${INFLUX_ADMIN_TOKEN}
+```
+
+`influxdb3-core` = Compose service name.
+
+### Dashboard — fleet overview (provisioned JSON)
+
+- Variables: `machine` (distinct `machine_name`), `signal` (distinct `signal_key`). Panels filter by these.
+- Time-series panel: §3 query parameterized by variables.
+- Latest-value table: current reading per machine.
+
+### Alerting
+
+Unified alerting, runs headless on schedule (no dashboard open). Per rule: query → condition (e.g. last < 20) → pending period (e.g. 5m) → contact point.
+
+Use **multi-dimensional rules**: one rule per signal, `GROUP BY machine_id`, fans out per machine.
+
+Alert queries cannot use dashboard variables. Pin `signal_key` literally in rule query; machine stays a GROUP BY dimension.
+
+Thresholds: domain input, defined post-discovery (phase 5).
+
+## 5. Docker Compose
+
+Services: `influxdb3-core` (:8181), `grafana` (:3000), `collector`. Shared network → address by service name. Persisted volumes for InfluxDB + Grafana.
+
+## 6. Phases
+
+### Phase 1 — Stand up stack ✅
+
+`compose.yaml`, `.env.example`, `.gitignore`. Pins: `influxdb:3.11.2-core` (Docker `latest` now tracks 3 Core since Sep 15), `grafana/grafana:13.2.1` (note: `grafana-oss` repo stopped at 13.0.2). InfluxDB bound `127.0.0.1:8181`, operator token via `docker exec … influxdb3 create token --admin`, DB `proemion`, Grafana provisions SQL datasource (FlightSQL, `insecureGrpc`). Write endpoint: `/api/v3/write_lp?db=proemion`.
+
+Verify: curl write + SQL read-back ✅, datasource health ✅.
+
+### Phase 2 — Discovery ✅
+
+Auth + machine/signal listing via `bun run discover` (`collector/src/discover.ts`, one-off). Paginate `/machines`, per-machine `/signals`. Emit `discovery/machines.json`, `discovery/signals.csv` (key,label,type,unit,logicalType,machines).
+
+Findings: 9 machines, 153 unique signals, 1201 machine×signal series. All signals numeric. `logicalType` is `counter:increasing` for every signal, so it cannot discriminate. 103 signals exist on all 9 machines. At the 350-query cap, a full poll is 4 `/timeseries` requests.
+
+Verify: CSV reviewed ✅. Ingest allowlist still open (see §8).
+
+### Phase 3 — Collector core (plain TS) ✅
+
+Order:
+
+1. `config/collector.yaml` + `src/config.ts` — machine ids/names, 153-signal allowlist, interval, aggregation, bucket size, overlap.
+2. `src/window.ts` — pure alignment + overlap, no I/O.
+3. `src/points.ts` — series → point: tags, escaping, ns timestamp.
+4. `src/influx.ts` — `@influxdata/influxdb3-client` write.
+5. `src/main.ts` — loop, `--dry-run`, `backfill <from> <to>`. Chunk queries at 350/request.
+6. `bun test` — alignment + point building.
+
+Implementation notes: `from = floor(now/bucket)*bucket - (overlap+1)*bucket`, `to = floor(now/bucket)*bucket` (current incomplete bucket excluded). Per-machine signal lists fetched once at startup; allowlist filters them, and `unit` comes from the API signal (`unit.key`), not the YAML. Backfill steps in 1440-bucket chunks (stays under the 25000-bucket cap).
+
+Verify: `bun test` 12 pass ✅; dry-run tags/ns/grid-aligned ✅; live backfill 13 datapoints ✅; re-run same window stays 13 (idempotent) ✅.
+
+### Phase 4 — Dashboards
+
+Fleet overview + variables + time-series + latest-value table, provisioned from files.
+
+Verify: switch machines, graph moves.
+
+### Phase 5 — Alerting
+
+Contact point (TBD) + multi-dimensional rules per signal, `machine_id` dimension.
+
+Verify: force/lower threshold, notification arrives.
+
+### Phase 6 — Harden
+
+Retention decision (post-volume), healthchecks, restart policy, logging tidy, scoped tokens.
+
+Verify: full restart, zero manual steps.
+
+### Phase 7 — Effect (deferred, only when things work and time remains)
+
+Typed errors → `Schedule` loop → `Layer/Context`. Behavior unchanged. Unwrap only at edge via `runPromise`, never inside Effect.
 
 Step 1 — typed errors + wrap fetch:
 
@@ -361,146 +502,7 @@ await Effect.runPromise(program.pipe(Effect.provide(MainLive)));
 
 Pin Effect to current stable (v3 vs v4) at dep-add time; adjust snippets to match.
 
-## 3. InfluxDB 3 Core
-
-Port **8181** (8086 = v2). Docker. DB: `proemion` (created explicitly).
-
-Tags indexed, fields not. `machine_id`/`signal_key` must be tags.
-
-### Schema — table `signal` (numeric)
-
-| Part      | Name           | Example                      |
-| --------- | -------------- | ---------------------------- |
-| tag       | `machine_id`   | `ABC-1234`                   |
-| tag       | `machine_name` | `Excavator 1` (denormalized) |
-| tag       | `signal_key`   | `value.clamp.30.voltage`     |
-| tag       | `unit`         | `V`                          |
-| field     | `value`        | `13.8`                       |
-| timestamp | `time`         | ns                           |
-
-Second table `signal_state` for string/state signals only if discovery justifies. Numeric first.
-
-Line protocol: escape spaces/commas/`=` in tag values. Send ns explicitly.
-
-### Auth
-
-First start: admin endpoint unauthenticated until operator token created. Bind to `127.0.0.1` during bootstrap. Create operator token via CLI → `.env`. Use operator token for collector writes + Grafana reads initially; split to read/write-scoped tokens in phase 6.
-
-### Retention
-
-Set at DB creation, **immutable** in Core. Default infinite. Min `1h`. Start infinite (7 machines = tiny volume). To change: create new DB + repoint, or Enterprise.
-
-### Query (SQL via DataFusion; no Flux — deprecated)
-
-```sql
-SELECT
-  date_bin(INTERVAL '1 minute', time) AS time,
-  machine_name,
-  avg(value) AS value
-FROM signal
-WHERE $__timeFilter(time)
-  AND signal_key = 'value.clamp.30.voltage'
-GROUP BY 1, 2
-ORDER BY 1
-```
-
-`date_bin` = query-time downsampling. `$__timeFilter` = Grafana macro for dashboard range. `GROUP BY 1,2` = one line per machine.
-
-SQL in Grafana uses FlightSQL/gRPC → needs HTTP/2 + Grafana 12.2+. Running 13.2.1 — OK for local Docker (direct container link).
-
-## 4. Grafana
-
-### Datasource (provisioned YAML)
-
-```yaml
-apiVersion: 1
-datasources:
-  - name: InfluxDB-Proemion
-    type: influxdb
-    access: proxy
-    url: http://influxdb3-core:8181
-    jsonData:
-      version: SQL
-      dbName: proemion
-      insecureGrpc: true # no TLS locally
-    secureJsonData:
-      token: ${INFLUX_ADMIN_TOKEN}
-```
-
-`influxdb3-core` = Compose service name.
-
-### Dashboard — fleet overview (provisioned JSON)
-
-- Variables: `machine` (distinct `machine_name`), `signal` (distinct `signal_key`). Panels filter by these.
-- Time-series panel: §3 query parameterized by variables.
-- Latest-value table: current reading per machine.
-
-### Alerting
-
-Unified alerting, runs headless on schedule (no dashboard open). Per rule: query → condition (e.g. last < 20) → pending period (e.g. 5m) → contact point.
-
-Use **multi-dimensional rules**: one rule per signal, `GROUP BY machine_id`, fans out per machine.
-
-Alert queries cannot use dashboard variables. Pin `signal_key` literally in rule query; machine stays a GROUP BY dimension.
-
-Thresholds: domain input, defined post-discovery (phase 5).
-
-## 5. Docker Compose
-
-Services: `influxdb3-core` (:8181), `grafana` (:3000), `collector`. Shared network → address by service name. Persisted volumes for InfluxDB + Grafana.
-
-## 6. Phases
-
-### Phase 1 — Stand up stack ✅
-
-`compose.yaml`, `.env.example`, `.gitignore`. Pins: `influxdb:3.11.2-core` (Docker `latest` now tracks 3 Core since Sep 15), `grafana/grafana:13.2.1` (note: `grafana-oss` repo stopped at 13.0.2). InfluxDB bound `127.0.0.1:8181`, operator token via `docker exec … influxdb3 create token --admin`, DB `proemion`, Grafana provisions SQL datasource (FlightSQL, `insecureGrpc`). Write endpoint: `/api/v3/write_lp?db=proemion`.
-
-Verify: curl write + SQL read-back ✅, datasource health ✅.
-
-### Phase 2 — Discovery ✅
-
-Auth + machine/signal listing via `bun run discover` (`collector/src/discover.ts`, one-off). Paginate `/machines`, per-machine `/signals`. Emit `discovery/machines.json`, `discovery/signals.csv` (key,label,type,unit,logicalType,machines).
-
-Findings: 9 machines, 153 unique signals, 1201 machine×signal series. All signals numeric. `logicalType` is `counter:increasing` for every signal, so it cannot discriminate. 103 signals exist on all 9 machines. At the 350-query cap, a full poll is 4 `/timeseries` requests.
-
-Verify: CSV reviewed ✅. Ingest allowlist still open (see §8).
-
-### Phase 3a — Collector core (plain TS)
-
-Order:
-
-1. `config/collector.yaml` + `src/config.ts` — machine ids, signal allowlist, interval, aggregation, bucket size, overlap. Allowlist derived from `discovery/signals.csv` (`key`, `machines`).
-2. `src/window.ts` — pure alignment + overlap, no I/O.
-3. `src/points.ts` — series → point: tags, escaping, ns timestamp.
-4. `src/influx.ts` — `@influxdata/influxdb3-client` write.
-5. `src/main.ts` — loop, `--dry-run`, `backfill <from> <to>`. Chunk queries at 350/request.
-6. `bun test` — alignment + point building.
-
-Verify: dry-run lines correct (tags, ns timestamps, grid-aligned buckets); live run lands at right timestamps; re-run writes identical points.
-
-### Phase 3b — Effect
-
-Typed errors → `Schedule` loop → `Layer/Context`. Behavior unchanged.
-
 Verify: same points/timestamps; forced failure logs typed error, recovers next tick.
-
-### Phase 4 — Dashboards
-
-Fleet overview + variables + time-series + latest-value table, provisioned from files.
-
-Verify: switch machines, graph moves.
-
-### Phase 5 — Alerting
-
-Contact point (TBD) + multi-dimensional rules per signal, `machine_id` dimension.
-
-Verify: force/lower threshold, notification arrives.
-
-### Phase 6 — Harden
-
-Retention decision (post-volume), healthchecks, restart policy, logging tidy, scoped tokens.
-
-Verify: full restart, zero manual steps.
 
 ## 7. Secrets
 
@@ -510,9 +512,9 @@ Verify: full restart, zero manual steps.
 
 ## 8. Decisions
 
-Resolved: InfluxDB 3 Core + SQL; TS on Bun, no build; Effect gradual (plain first); machine IDs + signal scope via phase-2 discovery.
+Resolved: InfluxDB 3 Core + SQL; TS on Bun, no build; Effect deferred to phase 7 (plain first, only when things work); machine IDs + signal scope via phase-2 discovery; ingest allowlist = all 153 signals (1201 series, 4 requests/poll); bucket/interval 60s, overlap 1, `average`.
 
-Open: ingest allowlist scope — all 153 signals (1201 series, 4 requests/poll) or a subset (phase 3a). Alert destination (phase 5).
+Open: alert destination (phase 5).
 
 ## 9. Glossary
 

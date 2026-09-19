@@ -6,7 +6,13 @@ Polls the Proemion API and writes measurements to InfluxDB 3 Core.
 
 ```bash
 bun install
-bun run discover   # one-off: refresh discovery/machines.json and discovery/signals.csv
+bun run discover                     # one-off: refresh discovery/machines.json and discovery/signals.csv
+bun run test                         # window alignment + point building
+bun run dry-run                      # poll once, print line protocol, no write
+bun run start                        # poll loop, write to InfluxDB
+bun run backfill <fromIso> <toIso>   # fetch + write a past range
 ```
 
 Secrets load from the repo-root `.env` through the `bunfig.toml` preload (`src/load-dot-env.ts`).
+
+Poll settings and the machine/signal allowlist live in `config/collector.yaml`.
