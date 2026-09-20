@@ -1,9 +1,11 @@
 import pLimit from "p-limit";
 import type { AppConfig } from "../config/config.ts";
-import { log } from "../infra/logger.ts";
+import { createLogger } from "../infra/logger.ts";
 import type { ProemionClient } from "../proemion/client.ts";
 import type { Signal } from "../proemion/types.ts";
 import type { SeriesTarget } from "../domain/plan.ts";
+
+const logger = createLogger("targets");
 
 async function fetchAllowedForMachine(
   client: ProemionClient,
@@ -20,7 +22,7 @@ async function fetchAllowedForMachine(
       signalKey: signal.key,
       unit: signal.unit?.key ?? "",
     }));
-  log(`planned ${targets.length} signals for ${machineId} (${machineName})`);
+  logger.log(`planned ${targets.length} signals for ${machineId} (${machineName})`);
   return targets;
 }
 

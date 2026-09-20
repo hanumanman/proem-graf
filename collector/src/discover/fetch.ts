@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import pLimit from "p-limit";
-import { log } from "../infra/logger.ts";
+import { createLogger } from "../infra/logger.ts";
 import type { ProemionClient } from "../proemion/client.ts";
 import type { Machine } from "../proemion/types.ts";
 import {
@@ -9,6 +9,8 @@ import {
   sortSummaries,
   type SignalSummary,
 } from "./summary.ts";
+
+const logger = createLogger("discover");
 
 export async function fetchSignalSummaries(
   client: ProemionClient,
@@ -26,7 +28,7 @@ export async function fetchSignalSummaries(
   const index = new Map<string, SignalSummary>();
   for (const { machine, signals } of perMachine) {
     for (const signal of signals) mergeSignal(index, signal, machine.id);
-    log(`fetched ${signals.length} signals for ${machine.id} (${machine.name})`);
+    logger.log(`fetched ${signals.length} signals for ${machine.id} (${machine.name})`);
   }
   return sortSummaries([...index.values()]);
 }

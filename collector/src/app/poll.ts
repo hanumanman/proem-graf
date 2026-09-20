@@ -4,13 +4,15 @@ import { buildLineProtocol, type SignalDatapoint } from "../domain/points.ts";
 import { buildQueries, findSeries, type SeriesIndex, type SeriesTarget } from "../domain/plan.ts";
 import { alignedWindow, type TimeWindow } from "../domain/window.ts";
 import { chunk } from "../infra/chunk.ts";
-import { log } from "../infra/logger.ts";
+import { createLogger } from "../infra/logger.ts";
 import type { LineWriter } from "../influx/writer.ts";
 import type { ProemionClient } from "../proemion/client.ts";
 import type { TimeseriesResult } from "../proemion/types.ts";
 
 const MAX_QUERIES_PER_REQUEST = 350;
 const FETCH_CONCURRENCY = 3;
+
+const logger = createLogger("poll");
 
 export interface PollDeps {
   client: ProemionClient;
@@ -98,7 +100,7 @@ export async function pollWindow(deps: PollDeps, window: TimeWindow): Promise<nu
     await deps.writer.writeLines(lines);
     totalLines += lines.length;
   }
-  log(
+  logger.log(
     `window [${new Date(window.fromMs).toISOString()}, ${new Date(window.toMs).toISOString()}) -> ${totalLines} datapoints`,
   );
   return totalLines;
