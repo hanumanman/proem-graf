@@ -3,10 +3,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "discover": "bun src/discover.ts",
-    "start": "bun src/main.ts",
-    "dry-run": "bun src/main.ts --dry-run",
-    "backfill": "bun src/main.ts backfill",
+    "discover": "bun src/cli/discover.ts",
+    "start": "bun src/cli/main.ts",
+    "dry-run": "bun src/cli/main.ts --dry-run",
+    "backfill": "bun src/cli/main.ts backfill",
     "test": "bun test"
   },
   "devDependencies": {

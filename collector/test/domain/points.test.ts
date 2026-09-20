@@ -4,7 +4,7 @@ import {
   buildLineProtocolLine,
   escapeTagValue,
   formatTimestampNs,
-} from "../src/points.ts";
+} from "../../src/domain/points.ts";
 
 describe("escapeTagValue", () => {
   test("escapes spaces, commas, equals and backslashes", () => {
@@ -74,6 +74,9 @@ describe("buildLineProtocol", () => {
         value: 2,
       },
     ]);
-    expect(lines).toHaveLength(2);
+    expect(lines).toEqual([
+      "signal,machine_id=1,machine_name=m,signal_key=s,unit=u value=1 0",
+      "signal,machine_id=1,machine_name=m,signal_key=s,unit=u value=2 60000000000",
+    ]);
   });
 });

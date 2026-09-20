@@ -7,43 +7,42 @@ export interface SignalDatapoint {
   value: number;
 }
 
-export const MEASUREMENT_NAME = "signal";
+export const MEASUREMENT = "signal";
 
-/** Escape InfluxDB tag special chars: backslash, comma, equals, space. */
-export function escapeTagValue(rawValue: string): string {
-  return rawValue
+export function escapeTagValue(tagValue: string): string {
+  return tagValue
     .replaceAll("\\", "\\\\")
     .replaceAll(",", "\\,")
     .replaceAll("=", "\\=")
     .replaceAll(" ", "\\ ");
 }
 
-/**
- * Format epoch millis as integer nanosecond string for InfluxDB.
- * @throws Error when timeMs is non-finite.
- */
 export function formatTimestampNs(timeMs: number): string {
   if (!Number.isFinite(timeMs)) throw new Error("timeMs must be finite");
   return (BigInt(Math.round(timeMs)) * 1_000_000n).toString();
 }
 
-/**
- * Build InfluxDB line protocol line. Skips nothing, rejects non-finite value.
- * @throws Error when value is non-finite.
- */
-export function buildLineProtocolLine(datapoint: SignalDatapoint): string {
+function assertFiniteValue(datapoint: SignalDatapoint): void {
   if (!Number.isFinite(datapoint.value)) {
     throw new Error(
       `non-finite value for ${datapoint.machineId}/${datapoint.signalKey}`,
     );
   }
+}
+
+function buildTagSet(datapoint: SignalDatapoint): string {
   const tags = [
     `machine_id=${escapeTagValue(datapoint.machineId)}`,
     `machine_name=${escapeTagValue(datapoint.machineName)}`,
     `signal_key=${escapeTagValue(datapoint.signalKey)}`,
     `unit=${escapeTagValue(datapoint.unit)}`,
   ].join(",");
-  return `${MEASUREMENT_NAME},${tags} value=${datapoint.value} ${formatTimestampNs(datapoint.timeMs)}`;
+  return tags;
+}
+
+export function buildLineProtocolLine(datapoint: SignalDatapoint): string {
+  assertFiniteValue(datapoint);
+  return `${MEASUREMENT},${buildTagSet(datapoint)} value=${datapoint.value} ${formatTimestampNs(datapoint.timeMs)}`;
 }
 
 export function buildLineProtocol(datapoints: SignalDatapoint[]): string[] {

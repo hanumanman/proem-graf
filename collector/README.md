@@ -13,6 +13,6 @@ bun run start                        # poll loop, write to InfluxDB
 bun run backfill <fromIso> <toIso>   # fetch + write a past range
 ```
 
-Secrets load from the repo-root `.env` through the `bunfig.toml` preload (`src/load-dot-env.ts`).
+Secrets load from repo-root `.env` via `installDotEnv()` in `src/config/dotenv.ts`, called explicitly from `src/cli/main.ts` and `src/cli/discover.ts`.
 
 Poll settings and the machine/signal allowlist live in `config/collector.yaml`.

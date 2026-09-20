@@ -1,7 +1,11 @@
 import { InfluxDBClient } from "@influxdata/influxdb3-client";
-import type { InfluxConfig } from "./config.ts";
+import type { InfluxConfig } from "../config/config.ts";
 
-export class InfluxWriter {
+export interface LineWriter {
+  writeLines(lines: string[]): Promise<void>;
+}
+
+export class InfluxWriter implements LineWriter {
   private readonly client: InfluxDBClient;
   private readonly database: string;
 
@@ -23,5 +27,11 @@ export class InfluxWriter {
 
   async close(): Promise<void> {
     await this.client.close();
+  }
+}
+
+export class StdoutWriter implements LineWriter {
+  async writeLines(lines: string[]): Promise<void> {
+    for (const line of lines) console.log(line);
   }
 }
