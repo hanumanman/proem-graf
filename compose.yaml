@@ -12,6 +12,14 @@ services:
       - --data-dir=/var/lib/influxdb3
     volumes:
       - influxdb3-data:/var/lib/influxdb3
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    # No healthcheck: minimal image ships no http client.
+    # Collector retries with backoff by design, never crashes loop.
 
   grafana:
     image: grafana/grafana:13.2.1
@@ -26,6 +34,41 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
     depends_on:
       - influxdb3-core
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  collector:
+    image: oven/bun:1.2
+    container_name: proem-graf-collector
+    working_dir: /app/collector
+    volumes:
+      - ./collector:/app/collector
+    env_file:
+      - .env
+    environment:
+      # Inside compose network, reach InfluxDB by service name.
+      # `environment` wins over `env_file`.
+      INFLUX_HOST: http://influxdb3-core:8181
+      INFLUX_DATABASE: proemion
+    entrypoint: ["sh", "-c", "bun install --frozen-lockfile && exec bun src/cli/main.ts"]
+    depends_on:
+      - influxdb3-core
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
 
 volumes:
   influxdb3-data:
