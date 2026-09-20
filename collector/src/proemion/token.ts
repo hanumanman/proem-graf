@@ -1,4 +1,5 @@
 import { requestWithRetry, readJson } from "../infra/http.ts";
+import { systemClock, type Clock } from "../infra/clock.ts";
 import { parseTokenResponse } from "./schemas.ts";
 
 const REFRESH_EARLY_MS = 60_000;
@@ -12,6 +13,7 @@ export class TokenProvider {
     private readonly tokenUrl: string,
     private readonly clientId: string,
     private readonly clientSecret: string,
+    private readonly clock: Clock = systemClock,
   ) {}
 
   async getToken(): Promise<string> {
@@ -26,7 +28,7 @@ export class TokenProvider {
 
   private hasValidCache(): boolean {
     return (
-      this.cachedToken !== null && Date.now() < this.expiresAtMs - REFRESH_EARLY_MS
+      this.cachedToken !== null && this.clock.nowMs() < this.expiresAtMs - REFRESH_EARLY_MS
     );
   }
 
@@ -48,7 +50,7 @@ export class TokenProvider {
     const json = await readJson(response, "auth");
     const token = parseTokenResponse(json);
     this.cachedToken = token.accessToken;
-    this.expiresAtMs = Date.now() + token.expiresInSec * 1000;
+    this.expiresAtMs = this.clock.nowMs() + token.expiresInSec * 1000;
     return this.cachedToken;
   }
 }

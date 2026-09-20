@@ -42,4 +42,28 @@ describe("TokenProvider", () => {
     await provider.getToken();
     expect(calls).toBe(1);
   });
+
+  test("refreshes 60s early", async () => {
+    let calls = 0;
+    globalThis.fetch = (async () => {
+      calls += 1;
+      return new Response(
+        JSON.stringify({ access_token: "tok", expires_in: 3600, token_type: "bearer" }),
+        { status: 200 },
+      );
+    }) as unknown as typeof fetch;
+    let nowMs = 1_000_000;
+    const clock = { nowMs: () => nowMs };
+    const provider = new TokenProvider("https://auth.test/t", "id", "secret", clock);
+    await provider.getToken();
+    expect(calls).toBe(1);
+    // 61s before expiry: still cached.
+    nowMs = 1_000_000 + 3600_000 - 61_000;
+    await provider.getToken();
+    expect(calls).toBe(1);
+    // 59s before expiry: refresh.
+    nowMs = 1_000_000 + 3600_000 - 59_000;
+    await provider.getToken();
+    expect(calls).toBe(2);
+  });
 });
