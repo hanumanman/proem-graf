@@ -40,6 +40,24 @@ describe("alignedWindow", () => {
     expect(window.toMs - window.fromMs).toBe(3 * BUCKET_MS);
   });
 
+  test("lands both bounds on grid for unaligned now", () => {
+    const window = alignedWindow(SAMPLE_TIME_MS + 37_123, BUCKET_MS, 1);
+    expect(window.fromMs % BUCKET_MS).toBe(0);
+    expect(window.toMs % BUCKET_MS).toBe(0);
+  });
+
+  test("never includes the in-progress bucket", () => {
+    const window = alignedWindow(SAMPLE_TIME_MS, BUCKET_MS, 1);
+    expect(window.toMs).toBeLessThanOrEqual(SAMPLE_TIME_MS);
+  });
+
+  test("span is exact for any overlap", () => {
+    for (const overlap of [0, 1, 5]) {
+      const window = alignedWindow(SAMPLE_TIME_MS, BUCKET_MS, overlap);
+      expect(window.toMs - window.fromMs).toBe((overlap + 1) * BUCKET_MS);
+    }
+  });
+
   test("rejects negative overlap", () => {
     expect(() => alignedWindow(1_000, BUCKET_MS, -1)).toThrow();
   });

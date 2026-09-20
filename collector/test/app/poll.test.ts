@@ -1,8 +1,65 @@
 import { describe, expect, test } from "bun:test";
-import { pollWindow, toDatapoints, type PollDeps } from "../../src/app/poll.ts";
+import { currentWindow, pollWindow, toDatapoints, type PollDeps } from "../../src/app/poll.ts";
 import { buildSeriesIndex, type SeriesTarget } from "../../src/domain/plan.ts";
+import type { CollectorConfig } from "../../src/config/config.ts";
+import type { TimeWindow } from "../../src/domain/window.ts";
 import type { ProemionClient } from "../../src/proemion/client.ts";
 import type { TimeseriesResult } from "../../src/proemion/types.ts";
+
+const BUCKET_MS = 60_000;
+
+function makeCollector(): CollectorConfig {
+  return {
+    pollIntervalMs: 60_000,
+    bucketSizeMs: BUCKET_MS,
+    overlapBuckets: 1,
+    aggregationFunction: "average",
+    machines: [{ id: "m1", name: "Rig" }],
+    signals: ["s1"],
+  };
+}
+
+function makeSingleTargetDeps(batches: string[][], windows: TimeWindow[]): PollDeps {
+  const collector = makeCollector();
+  const targets = [{ machineId: "m1", machineName: "Rig", signalKey: "s1", unit: "u" }];
+  const result: TimeseriesResult = {
+    type: "machine",
+    id: "m1",
+    signal: "s1",
+    aggregationFunction: "average",
+    totalDatapoints: 1,
+    timeseries: [{ time: 60_000, value: 1 }],
+  };
+  const client = {
+    fetchTimeseries: async (request: { window: TimeWindow }) => {
+      windows.push(request.window);
+      return [result];
+    },
+  } as unknown as ProemionClient;
+  return {
+    client,
+    writer: { writeLines: async (batch: string[]) => { batches.push(batch); } },
+    collector,
+    targets,
+    index: buildSeriesIndex(targets),
+  };
+}
+
+describe("currentWindow", () => {
+  test("returns exact grid-aligned bounds", () => {
+    expect(currentWindow(makeCollector(), 120_000)).toEqual({
+      fromMs: 0,
+      toMs: 120_000,
+    });
+  });
+
+  test("floors unaligned now onto grid", () => {
+    expect(currentWindow(makeCollector(), 150_123)).toEqual({
+      fromMs: 0,
+      toMs: 120_000,
+    });
+  });
+});
 
 describe("toDatapoints", () => {
   test("drops unknown series and null values", () => {
@@ -62,7 +119,17 @@ describe("toDatapoints", () => {
   });
 });
 
-describe("pollWindow fan-out", () => {
+describe("pollWindow", () => {
+  test("writes lines and returns count", async () => {
+    const batches: string[][] = [];
+    const windows: TimeWindow[] = [];
+    const total = await pollWindow(makeSingleTargetDeps(batches, windows), { fromMs: 0, toMs: 60_000 });
+    expect(total).toBe(1);
+    expect(windows).toEqual([{ fromMs: 0, toMs: 60_000 }]);
+    expect(batches).toHaveLength(1);
+    expect(batches[0]).toHaveLength(1);
+  });
+
   test("chunks 1201 targets at 350 per request in order", async () => {
     const targets: SeriesTarget[] = Array.from({ length: 1201 }, (_, i) => ({
       machineId: `m${i}`,

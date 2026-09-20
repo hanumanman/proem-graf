@@ -11,6 +11,10 @@ describe("escapeTagValue", () => {
     expect(escapeTagValue("a b,c=d\\e")).toBe("a\\ b\\,c\\=d\\\\e");
   });
 
+  test("escapes backslash before other specials", () => {
+    expect(escapeTagValue("a\\b c")).toBe("a\\\\b\\ c");
+  });
+
   test("leaves plain values untouched", () => {
     expect(escapeTagValue("value.clamp.30.voltage")).toBe(
       "value.clamp.30.voltage",
@@ -21,6 +25,14 @@ describe("escapeTagValue", () => {
 describe("formatTimestampNs", () => {
   test("converts epoch ms to nanoseconds", () => {
     expect(formatTimestampNs(1_757_654_460_000)).toBe("1757654460000000000");
+  });
+
+  test("scales by exactly 1e6 with no rounding of integers", () => {
+    expect(formatTimestampNs(1)).toBe("1000000");
+  });
+
+  test("pins Math.round for fractional ms", () => {
+    expect(formatTimestampNs(1.5)).toBe("2000000");
   });
 });
 
