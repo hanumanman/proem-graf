@@ -1,5 +1,4 @@
 import { join } from "node:path";
-import { installDotEnv } from "../config/dotenv.ts";
 import {
   PROEMION_BASE_URL,
   PROEMION_TOKEN_URL,
@@ -37,7 +36,6 @@ function buildClient(): ProemionClient {
 }
 
 async function run(): Promise<void> {
-  await installDotEnv();
   const client = buildClient();
   const discoveryDir = join(import.meta.dir, "..", "..", "..", "discovery");
   const machines = await fetchAllMachines(client);

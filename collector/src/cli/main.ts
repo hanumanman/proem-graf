@@ -1,6 +1,5 @@
 import { loadAppConfig } from "../config/load.ts";
 import type { AppConfig } from "../config/config.ts";
-import { installDotEnv } from "../config/dotenv.ts";
 import { buildSeriesIndex } from "../domain/plan.ts";
 import { InfluxWriter, StdoutWriter, type LineWriter } from "../influx/writer.ts";
 import { ProemionClient } from "../proemion/client.ts";
@@ -69,7 +68,6 @@ async function runBackfillCommand(deps: PollDeps, args: CliArgs): Promise<void> 
 }
 
 async function main(): Promise<void> {
-  await installDotEnv();
   const args = parseCliArgs(process.argv.slice(2));
   const config = await loadAppConfig();
   const writer: LineWriter = args.dryRun

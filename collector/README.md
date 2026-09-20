@@ -13,6 +13,6 @@ bun run start                        # poll loop, write to InfluxDB
 bun run backfill <fromIso> <toIso>   # fetch + write a past range
 ```
 
-Secrets load from repo-root `.env` via `installDotEnv()` in `src/config/dotenv.ts`, called explicitly from `src/cli/main.ts` and `src/cli/discover.ts`.
+Secrets come from the environment. Local runs load repo-root `.env` via Bun's `--env-file=../.env` flag in the npm scripts. App code only reads `Bun.env` and fails fast on missing vars.
 
 Poll settings and the machine/signal allowlist live in `config/collector.yaml`.
