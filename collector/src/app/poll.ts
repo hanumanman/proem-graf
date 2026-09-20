@@ -3,7 +3,6 @@ import type { CollectorConfig } from "../config/config.ts";
 import { buildLineProtocol, type SignalDatapoint } from "../domain/points.ts";
 import { buildQueries, findSeries, type SeriesIndex, type SeriesTarget } from "../domain/plan.ts";
 import { alignedWindow, type TimeWindow } from "../domain/window.ts";
-import { chunk } from "../infra/chunk.ts";
 import { createLogger } from "../infra/logger.ts";
 import type { LineWriter } from "../influx/writer.ts";
 import type { ProemionClient } from "../proemion/client.ts";
@@ -73,6 +72,17 @@ export function toDatapoints(
   index: SeriesIndex,
 ): SignalDatapoint[] {
   return results.flatMap((result) => mapResultToDatapoints(result, index));
+}
+
+function chunk<T>(items: T[], chunkSize: number): T[][] {
+  if (!Number.isInteger(chunkSize) || chunkSize <= 0) {
+    throw new Error("chunkSize must be a positive integer");
+  }
+  const chunks: T[][] = [];
+  for (let index = 0; index < items.length; index += chunkSize) {
+    chunks.push(items.slice(index, index + chunkSize));
+  }
+  return chunks;
 }
 
 async function fetchChunk(
