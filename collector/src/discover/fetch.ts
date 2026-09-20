@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import pLimit from "p-limit";
 import { log } from "../infra/logger.ts";
 import type { ProemionClient } from "../proemion/client.ts";
 import type { Machine } from "../proemion/types.ts";
@@ -13,9 +14,17 @@ export async function fetchSignalSummaries(
   client: ProemionClient,
   machines: Machine[],
 ): Promise<SignalSummary[]> {
+  const limit = pLimit(3);
+  const perMachine = await Promise.all(
+    machines.map((machine) =>
+      limit(async () => ({
+        machine,
+        signals: await client.fetchMachineSignals(machine.id),
+      })),
+    ),
+  );
   const index = new Map<string, SignalSummary>();
-  for (const machine of machines) {
-    const signals = await client.fetchMachineSignals(machine.id);
+  for (const { machine, signals } of perMachine) {
     for (const signal of signals) mergeSignal(index, signal, machine.id);
     log(`fetched ${signals.length} signals for ${machine.id} (${machine.name})`);
   }

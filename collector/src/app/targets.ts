@@ -1,3 +1,4 @@
+import pLimit from "p-limit";
 import type { AppConfig } from "../config/config.ts";
 import { log } from "../infra/logger.ts";
 import type { ProemionClient } from "../proemion/client.ts";
@@ -28,11 +29,11 @@ export async function buildTargets(
   config: AppConfig,
 ): Promise<SeriesTarget[]> {
   const allowed = new Set(config.collector.signals);
-  const allTargets: SeriesTarget[][] = [];
-  for (const machine of config.collector.machines) {
-    allTargets.push(
-      await fetchAllowedForMachine(client, machine.id, machine.name, allowed),
-    );
-  }
+  const limit = pLimit(3);
+  const allTargets = await Promise.all(
+    config.collector.machines.map((machine) =>
+      limit(() => fetchAllowedForMachine(client, machine.id, machine.name, allowed)),
+    ),
+  );
   return allTargets.flat();
 }

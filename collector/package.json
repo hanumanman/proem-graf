@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@influxdata/influxdb3-client": "^2.4.0",
-    "yaml": "^2.9.1"
+    "p-limit": "^7.3.3",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.5"
   }
 }

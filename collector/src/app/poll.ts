@@ -1,3 +1,4 @@
+import pLimit from "p-limit";
 import type { CollectorConfig } from "../config/config.ts";
 import { buildLineProtocol, type SignalDatapoint } from "../domain/points.ts";
 import { buildQueries, findSeries, type SeriesIndex, type SeriesTarget } from "../domain/plan.ts";
@@ -9,6 +10,7 @@ import type { ProemionClient } from "../proemion/client.ts";
 import type { TimeseriesResult } from "../proemion/types.ts";
 
 const MAX_QUERIES_PER_REQUEST = 350;
+const FETCH_CONCURRENCY = 3;
 
 export interface PollDeps {
   client: ProemionClient;
@@ -85,9 +87,13 @@ async function fetchChunk(
 }
 
 export async function pollWindow(deps: PollDeps, window: TimeWindow): Promise<number> {
+  const chunks = chunk(deps.targets, MAX_QUERIES_PER_REQUEST);
+  const limit = pLimit(FETCH_CONCURRENCY);
+  const fetched = await Promise.all(
+    chunks.map((chunkTargets) => limit(() => fetchChunk(deps, chunkTargets, window))),
+  );
   let totalLines = 0;
-  for (const chunkTargets of chunk(deps.targets, MAX_QUERIES_PER_REQUEST)) {
-    const datapoints = await fetchChunk(deps, chunkTargets, window);
+  for (const datapoints of fetched) {
     const lines = buildLineProtocol(datapoints);
     await deps.writer.writeLines(lines);
     totalLines += lines.length;

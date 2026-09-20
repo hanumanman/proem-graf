@@ -1,3 +1,10 @@
+import { requestWithRetry, readJson } from "../infra/http.ts";
+import {
+  parseMachineCount,
+  parseMachines,
+  parseSignals,
+  parseTimeseriesResults,
+} from "./schemas.ts";
 import { TokenProvider } from "./token.ts";
 import type {
   Machine,
@@ -15,21 +22,26 @@ export class ProemionClient {
   ) {}
 
   async fetchMachineCount(): Promise<number> {
-    return this.fetchJson<number>("/machines/count");
+    return this.fetchJson("/machines/count", parseMachineCount);
   }
 
   async fetchMachines(limit: number, offset: number): Promise<Machine[]> {
-    return this.fetchJson<Machine[]>(`/machines?limit=${limit}&offset=${offset}`);
+    const query = new URLSearchParams({
+      limit: String(limit),
+      offset: String(offset),
+    });
+    return this.fetchJson(`/machines?${query.toString()}`, parseMachines);
   }
 
   async fetchMachineSignals(machineId: string): Promise<Signal[]> {
-    return this.fetchJson<Signal[]>(
+    return this.fetchJson(
       `/machines/${encodeURIComponent(machineId)}/signals`,
+      parseSignals,
     );
   }
 
   async fetchTimeseries(request: TimeseriesRequest): Promise<TimeseriesResult[]> {
-    return this.postJson<TimeseriesResult[]>("/timeseries", {
+    return this.postJson("/timeseries", parseTimeseriesResults, {
       from: request.window.fromMs,
       to: request.window.toMs,
       bucketSize: request.bucketSizeMs,
@@ -43,25 +55,31 @@ export class ProemionClient {
     return { authorization: `Bearer ${token}` };
   }
 
-  private async checkOk(response: Response, context: string): Promise<void> {
-    if (!response.ok) throw new Error(`${context} failed: HTTP ${response.status}`);
+  private async fetchJson<T>(path: string, parse: (json: unknown) => T): Promise<T> {
+    const headers = await this.authHeaders();
+    const response = await requestWithRetry(
+      `${this.baseUrl}${path}`,
+      { headers },
+      `GET ${path}`,
+    );
+    return parse(await readJson(response, `GET ${path}`));
   }
 
-  private async fetchJson<T>(path: string): Promise<T> {
+  private async postJson<T>(
+    path: string,
+    parse: (json: unknown) => T,
+    body: unknown,
+  ): Promise<T> {
     const headers = await this.authHeaders();
-    const response = await fetch(`${this.baseUrl}${path}`, { headers });
-    await this.checkOk(response, `GET ${path}`);
-    return (await response.json()) as T;
-  }
-
-  private async postJson<T>(path: string, body: unknown): Promise<T> {
-    const headers = await this.authHeaders();
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      method: "POST",
-      headers: { ...headers, "content-type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    await this.checkOk(response, `POST ${path}`);
-    return (await response.json()) as T;
+    const response = await requestWithRetry(
+      `${this.baseUrl}${path}`,
+      {
+        method: "POST",
+        headers: { ...headers, "content-type": "application/json" },
+        body: JSON.stringify(body),
+      },
+      `POST ${path}`,
+    );
+    return parse(await readJson(response, `POST ${path}`));
   }
 }
