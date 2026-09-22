@@ -131,8 +131,10 @@ export function parseCollectorConfig(yamlText: string): CollectorConfig {
   }
   return {
     pollIntervalMs:
-      requirePositiveInteger(rawConfig.pollIntervalSeconds, "pollIntervalSeconds") *
-      1000,
+      requirePositiveInteger(
+        rawConfig.pollIntervalSeconds,
+        "pollIntervalSeconds",
+      ) * 1000,
     bucketSizeMs:
       requirePositiveInteger(rawConfig.bucketSizeSeconds, "bucketSizeSeconds") *
       1000,
@@ -140,7 +142,9 @@ export function parseCollectorConfig(yamlText: string): CollectorConfig {
       rawConfig.overlapBuckets,
       "overlapBuckets",
     ),
-    aggregationFunction: parseAggregationFunction(rawConfig.aggregationFunction),
+    aggregationFunction: parseAggregationFunction(
+      rawConfig.aggregationFunction,
+    ),
     machines: parseMachineConfigs(rawConfig.machines),
     signals: parseSignalKeys(rawConfig.signals),
   };

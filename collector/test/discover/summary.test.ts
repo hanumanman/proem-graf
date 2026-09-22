@@ -38,7 +38,11 @@ describe("formatLogicalType", () => {
 
   test("type plus qualifier", () => {
     expect(
-      formatLogicalType(makeSignal({ logicalType: { type: "counter", direction: "increasing" } })),
+      formatLogicalType(
+        makeSignal({
+          logicalType: { type: "counter", direction: "increasing" },
+        }),
+      ),
     ).toBe("counter:increasing");
   });
 });
@@ -55,8 +59,22 @@ describe("mergeSignal", () => {
 describe("sortSummaries", () => {
   test("sorts by key", () => {
     const sorted = sortSummaries([
-      { key: "b", label: "", type: "", unit: "", logicalType: "", machineIds: [] },
-      { key: "a", label: "", type: "", unit: "", logicalType: "", machineIds: [] },
+      {
+        key: "b",
+        label: "",
+        type: "",
+        unit: "",
+        logicalType: "",
+        machineIds: [],
+      },
+      {
+        key: "a",
+        label: "",
+        type: "",
+        unit: "",
+        logicalType: "",
+        machineIds: [],
+      },
     ]);
     expect(sorted.map((s) => s.key)).toEqual(["a", "b"]);
   });
@@ -65,7 +83,14 @@ describe("sortSummaries", () => {
 describe("serializeToCsv", () => {
   test("writes header plus rows", () => {
     const csv = serializeToCsv([
-      { key: "k", label: "l", type: "numeric", unit: "u", logicalType: "", machineIds: ["m1"] },
+      {
+        key: "k",
+        label: "l",
+        type: "numeric",
+        unit: "u",
+        logicalType: "",
+        machineIds: ["m1"],
+      },
     ]);
     expect(csv).toContain("key,label,type,unit,logicalType,machines");
     expect(csv).toContain("k,l,numeric,u,,m1");

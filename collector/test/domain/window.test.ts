@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { alignToBucket, alignedWindow } from "../../src/domain/window.ts";
+import { alignedWindow, alignToBucket } from "../../src/domain/window.ts";
 
 const SAMPLE_TIME_MS = 1_757_654_460_123;
 const ALIGNED_SAMPLE_TIME_MS = 1_757_654_460_000;
@@ -7,7 +7,9 @@ const BUCKET_MS = 60_000;
 
 describe("alignToBucket", () => {
   test("floors to the bucket grid", () => {
-    expect(alignToBucket(SAMPLE_TIME_MS, BUCKET_MS)).toBe(ALIGNED_SAMPLE_TIME_MS);
+    expect(alignToBucket(SAMPLE_TIME_MS, BUCKET_MS)).toBe(
+      ALIGNED_SAMPLE_TIME_MS,
+    );
   });
 
   test("keeps an already aligned timestamp", () => {
@@ -17,9 +19,9 @@ describe("alignToBucket", () => {
   });
 
   test("is idempotent", () => {
-    expect(alignToBucket(alignToBucket(SAMPLE_TIME_MS, BUCKET_MS), BUCKET_MS)).toBe(
-      ALIGNED_SAMPLE_TIME_MS,
-    );
+    expect(
+      alignToBucket(alignToBucket(SAMPLE_TIME_MS, BUCKET_MS), BUCKET_MS),
+    ).toBe(ALIGNED_SAMPLE_TIME_MS);
   });
 
   test("rejects a non-positive bucket", () => {

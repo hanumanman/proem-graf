@@ -4,14 +4,11 @@ import {
   PROEMION_TOKEN_URL,
   requireEnvVariable,
 } from "../config/load.ts";
+import { fetchSignalSummaries, writeDiscovery } from "../discover/fetch.ts";
 import { createLogger } from "../infra/logger.ts";
 import { ProemionClient } from "../proemion/client.ts";
 import { TokenProvider } from "../proemion/token.ts";
 import type { Machine } from "../proemion/types.ts";
-import {
-  fetchSignalSummaries,
-  writeDiscovery,
-} from "../discover/fetch.ts";
 
 const MACHINE_PAGE_SIZE = 100;
 

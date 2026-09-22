@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
+import type { SeriesTarget } from "../../src/domain/plan.ts";
 import {
   buildQueries,
   buildSeriesIndex,
   findSeries,
 } from "../../src/domain/plan.ts";
-import type { SeriesTarget } from "../../src/domain/plan.ts";
 
 const TARGET_A: SeriesTarget = {
   machineId: "m1",
@@ -30,7 +30,9 @@ describe("buildSeriesIndex", () => {
   test("returns undefined for missing", () => {
     const index = buildSeriesIndex([TARGET_A]);
     expect(findSeries(index, "m1", "missing")).toBeUndefined();
-    expect(findSeries(index, "missing", "value.Engine.Running")).toBeUndefined();
+    expect(
+      findSeries(index, "missing", "value.Engine.Running"),
+    ).toBeUndefined();
   });
 });
 

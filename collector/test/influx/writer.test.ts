@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, test } from "bun:test";
 import { InfluxWriter } from "../../src/influx/writer.ts";
 
 describe("InfluxWriter", () => {

@@ -10,7 +10,9 @@ const BUCKET_MS = 60_000;
 const CHUNK_SPAN_MS = 1440 * BUCKET_MS;
 
 function makeDeps(batches: string[][], windows: TimeWindow[]): PollDeps {
-  const targets = [{ machineId: "m1", machineName: "Rig", signalKey: "s1", unit: "u" }];
+  const targets = [
+    { machineId: "m1", machineName: "Rig", signalKey: "s1", unit: "u" },
+  ];
   const result: TimeseriesResult = {
     type: "machine",
     id: "m1",
@@ -27,7 +29,11 @@ function makeDeps(batches: string[][], windows: TimeWindow[]): PollDeps {
   } as unknown as ProemionClient;
   return {
     client,
-    writer: { writeLines: async (batch: string[]) => { batches.push(batch); } },
+    writer: {
+      writeLines: async (batch: string[]) => {
+        batches.push(batch);
+      },
+    },
     collector: {
       pollIntervalMs: 60_000,
       bucketSizeMs: BUCKET_MS,
@@ -58,7 +64,11 @@ describe("alignBackfillRange", () => {
 
   test("is idempotent", () => {
     const once = alignBackfillRange(1_000, 61_000, 60_000);
-    const twice = alignBackfillRange(once.alignedFromMs, once.alignedToMs, 60_000);
+    const twice = alignBackfillRange(
+      once.alignedFromMs,
+      once.alignedToMs,
+      60_000,
+    );
     expect(twice).toEqual(once);
   });
 
@@ -70,7 +80,9 @@ describe("alignBackfillRange", () => {
         return [];
       },
     } as unknown as ProemionClient;
-    const targets = [{ machineId: "m1", machineName: "Rig", signalKey: "s1", unit: "u" }];
+    const targets = [
+      { machineId: "m1", machineName: "Rig", signalKey: "s1", unit: "u" },
+    ];
     const deps: PollDeps = {
       client,
       writer: { writeLines: async () => {} },

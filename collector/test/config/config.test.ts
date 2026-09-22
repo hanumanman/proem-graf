@@ -32,7 +32,7 @@ describe("parseCollectorConfig", () => {
   });
 
   test("rejects bad machine record", () => {
-    const bad = BASE_YAML.replace('id: "1"', 'id: 1');
+    const bad = BASE_YAML.replace('id: "1"', "id: 1");
     expect(() => parseCollectorConfig(bad)).toThrow();
   });
 
@@ -43,7 +43,9 @@ describe("parseCollectorConfig", () => {
 
   test("rejects non-positive interval", () => {
     expect(() =>
-      parseCollectorConfig(BASE_YAML.replace("pollIntervalSeconds: 60", "pollIntervalSeconds: 0")),
+      parseCollectorConfig(
+        BASE_YAML.replace("pollIntervalSeconds: 60", "pollIntervalSeconds: 0"),
+      ),
     ).toThrow();
   });
 });

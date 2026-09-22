@@ -1,7 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import { currentWindow, pollWindow, toDatapoints, type PollDeps } from "../../src/app/poll.ts";
-import { buildSeriesIndex, type SeriesTarget } from "../../src/domain/plan.ts";
+import {
+  currentWindow,
+  type PollDeps,
+  pollWindow,
+  toDatapoints,
+} from "../../src/app/poll.ts";
 import type { CollectorConfig } from "../../src/config/config.ts";
+import { buildSeriesIndex, type SeriesTarget } from "../../src/domain/plan.ts";
 import type { TimeWindow } from "../../src/domain/window.ts";
 import type { ProemionClient } from "../../src/proemion/client.ts";
 import type { TimeseriesResult } from "../../src/proemion/types.ts";
@@ -19,9 +24,14 @@ function makeCollector(): CollectorConfig {
   };
 }
 
-function makeSingleTargetDeps(batches: string[][], windows: TimeWindow[]): PollDeps {
+function makeSingleTargetDeps(
+  batches: string[][],
+  windows: TimeWindow[],
+): PollDeps {
   const collector = makeCollector();
-  const targets = [{ machineId: "m1", machineName: "Rig", signalKey: "s1", unit: "u" }];
+  const targets = [
+    { machineId: "m1", machineName: "Rig", signalKey: "s1", unit: "u" },
+  ];
   const result: TimeseriesResult = {
     type: "machine",
     id: "m1",
@@ -38,7 +48,11 @@ function makeSingleTargetDeps(batches: string[][], windows: TimeWindow[]): PollD
   } as unknown as ProemionClient;
   return {
     client,
-    writer: { writeLines: async (batch: string[]) => { batches.push(batch); } },
+    writer: {
+      writeLines: async (batch: string[]) => {
+        batches.push(batch);
+      },
+    },
     collector,
     targets,
     index: buildSeriesIndex(targets),
@@ -123,7 +137,10 @@ describe("pollWindow", () => {
   test("writes lines and returns count", async () => {
     const batches: string[][] = [];
     const windows: TimeWindow[] = [];
-    const total = await pollWindow(makeSingleTargetDeps(batches, windows), { fromMs: 0, toMs: 60_000 });
+    const total = await pollWindow(makeSingleTargetDeps(batches, windows), {
+      fromMs: 0,
+      toMs: 60_000,
+    });
     expect(total).toBe(1);
     expect(windows).toEqual([{ fromMs: 0, toMs: 60_000 }]);
     expect(batches).toHaveLength(1);

@@ -1,10 +1,15 @@
 import pLimit from "p-limit";
 import type { CollectorConfig } from "../config/config.ts";
+import {
+  buildQueries,
+  findSeries,
+  type SeriesIndex,
+  type SeriesTarget,
+} from "../domain/plan.ts";
 import { buildLineProtocol, type SignalDatapoint } from "../domain/points.ts";
-import { buildQueries, findSeries, type SeriesIndex, type SeriesTarget } from "../domain/plan.ts";
 import { alignedWindow, type TimeWindow } from "../domain/window.ts";
-import { createLogger } from "../infra/logger.ts";
 import type { LineWriter } from "../influx/writer.ts";
+import { createLogger } from "../infra/logger.ts";
 import type { ProemionClient } from "../proemion/client.ts";
 import type { TimeseriesResult } from "../proemion/types.ts";
 
@@ -21,7 +26,10 @@ export interface PollDeps {
   index: SeriesIndex;
 }
 
-export function currentWindow(collector: CollectorConfig, nowMs: number): TimeWindow {
+export function currentWindow(
+  collector: CollectorConfig,
+  nowMs: number,
+): TimeWindow {
   return alignedWindow(nowMs, collector.bucketSizeMs, collector.overlapBuckets);
 }
 
@@ -98,11 +106,16 @@ async function fetchChunk(
   return toDatapoints(results, deps.index);
 }
 
-export async function pollWindow(deps: PollDeps, window: TimeWindow): Promise<number> {
+export async function pollWindow(
+  deps: PollDeps,
+  window: TimeWindow,
+): Promise<number> {
   const chunks = chunk(deps.targets, MAX_QUERIES_PER_REQUEST);
   const limit = pLimit(FETCH_CONCURRENCY);
   const fetched = await Promise.all(
-    chunks.map((chunkTargets) => limit(() => fetchChunk(deps, chunkTargets, window))),
+    chunks.map((chunkTargets) =>
+      limit(() => fetchChunk(deps, chunkTargets, window)),
+    ),
   );
   let totalLines = 0;
   for (const datapoints of fetched) {

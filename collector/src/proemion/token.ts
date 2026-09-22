@@ -1,5 +1,5 @@
-import { requestWithRetry, readJson } from "../infra/http.ts";
-import { systemClock, type Clock } from "../infra/clock.ts";
+import { type Clock, systemClock } from "../infra/clock.ts";
+import { readJson, requestWithRetry } from "../infra/http.ts";
 import { parseTokenResponse } from "./schemas.ts";
 
 const REFRESH_EARLY_MS = 60_000;
@@ -28,7 +28,8 @@ export class TokenProvider {
 
   private hasValidCache(): boolean {
     return (
-      this.cachedToken !== null && this.clock.nowMs() < this.expiresAtMs - REFRESH_EARLY_MS
+      this.cachedToken !== null &&
+      this.clock.nowMs() < this.expiresAtMs - REFRESH_EARLY_MS
     );
   }
 

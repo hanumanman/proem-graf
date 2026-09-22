@@ -1,5 +1,5 @@
 import { createLogger } from "../infra/logger.ts";
-import { currentWindow, pollWindow, type PollDeps } from "./poll.ts";
+import { currentWindow, type PollDeps, pollWindow } from "./poll.ts";
 
 const logger = createLogger("loop");
 

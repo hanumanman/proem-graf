@@ -1,9 +1,5 @@
 import { z } from "zod";
-import type {
-  Machine,
-  Signal,
-  TimeseriesResult,
-} from "./types.ts";
+import type { Machine, Signal, TimeseriesResult } from "./types.ts";
 
 const tokenResponseSchema = z.object({
   access_token: z.string().min(1),

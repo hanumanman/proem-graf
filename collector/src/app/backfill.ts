@@ -1,5 +1,5 @@
 import { alignToBucket } from "../domain/window.ts";
-import { pollWindow, type PollDeps } from "./poll.ts";
+import { type PollDeps, pollWindow } from "./poll.ts";
 
 const BACKFILL_CHUNK_BUCKETS = 1440;
 
@@ -23,8 +23,16 @@ export async function runBackfill(
 ): Promise<void> {
   const bucketSizeMs = deps.collector.bucketSizeMs;
   const chunkSpanMs = BACKFILL_CHUNK_BUCKETS * bucketSizeMs;
-  const { alignedFromMs, alignedToMs } = alignBackfillRange(fromMs, toMs, bucketSizeMs);
-  for (let cursorMs = alignedFromMs; cursorMs < alignedToMs; cursorMs += chunkSpanMs) {
+  const { alignedFromMs, alignedToMs } = alignBackfillRange(
+    fromMs,
+    toMs,
+    bucketSizeMs,
+  );
+  for (
+    let cursorMs = alignedFromMs;
+    cursorMs < alignedToMs;
+    cursorMs += chunkSpanMs
+  ) {
     const chunkToMs = Math.min(cursorMs + chunkSpanMs, alignedToMs);
     await pollWindow(deps, { fromMs: cursorMs, toMs: chunkToMs });
   }

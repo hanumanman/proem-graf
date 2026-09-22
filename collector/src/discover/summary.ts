@@ -52,7 +52,9 @@ export function mergeSignal(
 }
 
 export function sortSummaries(summaries: SignalSummary[]): SignalSummary[] {
-  return [...summaries].sort((left, right) => left.key.localeCompare(right.key));
+  return [...summaries].sort((left, right) =>
+    left.key.localeCompare(right.key),
+  );
 }
 
 function summaryToRow(summary: SignalSummary): string {
@@ -71,5 +73,5 @@ function summaryToRow(summary: SignalSummary): string {
 export function serializeToCsv(summaries: SignalSummary[]): string {
   const header = "key,label,type,unit,logicalType,machines";
   const rows = summaries.map(summaryToRow);
-  return [header, ...rows].join("\n") + "\n";
+  return `${[header, ...rows].join("\n")}\n`;
 }

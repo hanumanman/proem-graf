@@ -49,9 +49,12 @@ export async function requestWithRetry(
       });
     } catch (cause) {
       if (attempt >= maxRetries) {
-        throw new Error(`${context} network failed after ${attempt + 1} attempts`, {
-          cause,
-        });
+        throw new Error(
+          `${context} network failed after ${attempt + 1} attempts`,
+          {
+            cause,
+          },
+        );
       }
       await Bun.sleep(backoffDelayMs(attempt, baseDelayMs));
       continue;
@@ -66,7 +69,10 @@ export async function requestWithRetry(
   }
 }
 
-export async function readJson(response: Response, context: string): Promise<unknown> {
+export async function readJson(
+  response: Response,
+  context: string,
+): Promise<unknown> {
   try {
     return (await response.json()) as unknown;
   } catch (cause) {

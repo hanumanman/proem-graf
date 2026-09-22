@@ -1,13 +1,17 @@
-import { loadAppConfig } from "../config/load.ts";
-import type { AppConfig } from "../config/config.ts";
-import { buildSeriesIndex } from "../domain/plan.ts";
-import { InfluxWriter, StdoutWriter, type LineWriter } from "../influx/writer.ts";
-import { ProemionClient } from "../proemion/client.ts";
-import { TokenProvider } from "../proemion/token.ts";
 import { runBackfill } from "../app/backfill.ts";
 import { runLoop } from "../app/loop.ts";
-import { currentWindow, pollWindow, type PollDeps } from "../app/poll.ts";
+import { currentWindow, type PollDeps, pollWindow } from "../app/poll.ts";
 import { buildTargets } from "../app/targets.ts";
+import type { AppConfig } from "../config/config.ts";
+import { loadAppConfig } from "../config/load.ts";
+import { buildSeriesIndex } from "../domain/plan.ts";
+import {
+  InfluxWriter,
+  type LineWriter,
+  StdoutWriter,
+} from "../influx/writer.ts";
+import { ProemionClient } from "../proemion/client.ts";
+import { TokenProvider } from "../proemion/token.ts";
 
 function parseEpochMs(isoText: string, argName: string): number {
   const epochMs = Date.parse(isoText);
@@ -35,7 +39,10 @@ function parseCliArgs(rawArgs: string[]): CliArgs {
   };
 }
 
-async function buildDeps(config: AppConfig, writer: LineWriter): Promise<PollDeps> {
+async function buildDeps(
+  config: AppConfig,
+  writer: LineWriter,
+): Promise<PollDeps> {
   const tokens = new TokenProvider(
     config.proemion.tokenUrl,
     config.proemion.clientId,
@@ -56,7 +63,10 @@ async function runOnceDry(deps: PollDeps): Promise<void> {
   await pollWindow(deps, currentWindow(deps.collector, Date.now()));
 }
 
-async function runBackfillCommand(deps: PollDeps, args: CliArgs): Promise<void> {
+async function runBackfillCommand(
+  deps: PollDeps,
+  args: CliArgs,
+): Promise<void> {
   if (!args.backfillFrom || !args.backfillTo) {
     throw new Error("backfill requires <fromISO> <toISO>");
   }

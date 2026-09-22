@@ -15,7 +15,9 @@ describe("domain purity", () => {
       const text = await Bun.file(new URL(file, dir)).text();
       const withoutTypes = text.replace(/import\s+type\s+[^;]+;/g, "");
       const specs = [
-        ...withoutTypes.matchAll(/import\s+(?:[^"']+\s+from\s+)?["']([^"']+)["']/g),
+        ...withoutTypes.matchAll(
+          /import\s+(?:[^"']+\s+from\s+)?["']([^"']+)["']/g,
+        ),
       ].map((match) => match[1]);
       for (const spec of specs) {
         if (spec.startsWith("./") || spec.startsWith("../domain/")) continue;

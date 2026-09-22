@@ -1,9 +1,13 @@
-import { parseCollectorConfig, type AppConfig } from "./config.ts";
+import { type AppConfig, parseCollectorConfig } from "./config.ts";
 
 export const PROEMION_BASE_URL = "https://dataportal.proemion.com/api/v26.7.0";
-export const PROEMION_TOKEN_URL = "https://dataportal.proemion.com/api/auth/token";
+export const PROEMION_TOKEN_URL =
+  "https://dataportal.proemion.com/api/auth/token";
 
-const COLLECTOR_CONFIG_URL = new URL("../../config/collector.yaml", import.meta.url);
+const COLLECTOR_CONFIG_URL = new URL(
+  "../../config/collector.yaml",
+  import.meta.url,
+);
 const DEFAULT_INFLUX_HOST = "http://127.0.0.1:8181";
 const DEFAULT_INFLUX_DATABASE = "proemion";
 

@@ -9,7 +9,11 @@ import {
 describe("proemion contracts", () => {
   test("maps token response to camelCase", () => {
     expect(
-      parseTokenResponse({ access_token: "abc", expires_in: 3600, token_type: "bearer" }),
+      parseTokenResponse({
+        access_token: "abc",
+        expires_in: 3600,
+        token_type: "bearer",
+      }),
     ).toEqual({ accessToken: "abc", expiresInSec: 3600 });
   });
 

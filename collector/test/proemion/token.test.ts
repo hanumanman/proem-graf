@@ -1,4 +1,4 @@
-import { describe, expect, test, afterEach } from "bun:test";
+import { afterEach, describe, expect, test } from "bun:test";
 import { TokenProvider } from "../../src/proemion/token.ts";
 
 const originalFetch = globalThis.fetch;
@@ -14,7 +14,11 @@ describe("TokenProvider", () => {
       calls += 1;
       await Bun.sleep(10);
       return new Response(
-        JSON.stringify({ access_token: "tok", expires_in: 3600, token_type: "bearer" }),
+        JSON.stringify({
+          access_token: "tok",
+          expires_in: 3600,
+          token_type: "bearer",
+        }),
         { status: 200 },
       );
     }) as unknown as typeof fetch;
@@ -33,7 +37,11 @@ describe("TokenProvider", () => {
     globalThis.fetch = (async () => {
       calls += 1;
       return new Response(
-        JSON.stringify({ access_token: "tok", expires_in: 3600, token_type: "bearer" }),
+        JSON.stringify({
+          access_token: "tok",
+          expires_in: 3600,
+          token_type: "bearer",
+        }),
         { status: 200 },
       );
     }) as unknown as typeof fetch;
@@ -48,13 +56,22 @@ describe("TokenProvider", () => {
     globalThis.fetch = (async () => {
       calls += 1;
       return new Response(
-        JSON.stringify({ access_token: "tok", expires_in: 3600, token_type: "bearer" }),
+        JSON.stringify({
+          access_token: "tok",
+          expires_in: 3600,
+          token_type: "bearer",
+        }),
         { status: 200 },
       );
     }) as unknown as typeof fetch;
     let nowMs = 1_000_000;
     const clock = { nowMs: () => nowMs };
-    const provider = new TokenProvider("https://auth.test/t", "id", "secret", clock);
+    const provider = new TokenProvider(
+      "https://auth.test/t",
+      "id",
+      "secret",
+      clock,
+    );
     await provider.getToken();
     expect(calls).toBe(1);
     // 61s before expiry: still cached.

@@ -5,9 +5,9 @@ import type { ProemionClient } from "../proemion/client.ts";
 import type { Machine } from "../proemion/types.ts";
 import {
   mergeSignal,
+  type SignalSummary,
   serializeToCsv,
   sortSummaries,
-  type SignalSummary,
 } from "./summary.ts";
 
 const logger = createLogger("discover");
@@ -28,7 +28,9 @@ export async function fetchSignalSummaries(
   const index = new Map<string, SignalSummary>();
   for (const { machine, signals } of perMachine) {
     for (const signal of signals) mergeSignal(index, signal, machine.id);
-    logger.log(`fetched ${signals.length} signals for ${machine.id} (${machine.name})`);
+    logger.log(
+      `fetched ${signals.length} signals for ${machine.id} (${machine.name})`,
+    );
   }
   return sortSummaries([...index.values()]);
 }
@@ -40,11 +42,8 @@ export async function writeDiscovery(
 ): Promise<void> {
   await Bun.write(
     join(discoveryDir, "machines.json"),
-    JSON.stringify(
-      { fetchedAt: new Date().toISOString(), machines },
-      null,
-      2,
-    ) + "\n",
+    JSON.stringify({ fetchedAt: new Date().toISOString(), machines }, null, 2) +
+      "\n",
   );
   await Bun.write(join(discoveryDir, "signals.csv"), serializeToCsv(summaries));
 }

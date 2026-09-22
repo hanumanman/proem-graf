@@ -1,11 +1,11 @@
-import { requestWithRetry, readJson } from "../infra/http.ts";
+import { readJson, requestWithRetry } from "../infra/http.ts";
 import {
   parseMachineCount,
   parseMachines,
   parseSignals,
   parseTimeseriesResults,
 } from "./schemas.ts";
-import { TokenProvider } from "./token.ts";
+import type { TokenProvider } from "./token.ts";
 import type {
   Machine,
   Signal,
@@ -40,7 +40,9 @@ export class ProemionClient {
     );
   }
 
-  async fetchTimeseries(request: TimeseriesRequest): Promise<TimeseriesResult[]> {
+  async fetchTimeseries(
+    request: TimeseriesRequest,
+  ): Promise<TimeseriesResult[]> {
     return this.postJson("/timeseries", parseTimeseriesResults, {
       from: request.window.fromMs,
       to: request.window.toMs,
@@ -55,7 +57,10 @@ export class ProemionClient {
     return { authorization: `Bearer ${token}` };
   }
 
-  private async fetchJson<T>(path: string, parse: (json: unknown) => T): Promise<T> {
+  private async fetchJson<T>(
+    path: string,
+    parse: (json: unknown) => T,
+  ): Promise<T> {
     const headers = await this.authHeaders();
     const response = await requestWithRetry(
       `${this.baseUrl}${path}`,
