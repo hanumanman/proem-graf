@@ -1,0 +1,229 @@
+{
+  "uid": "fleet-overview",
+  "title": "Fleet overview",
+  "tags": ["fleet"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "editable": true,
+  "graphTooltip": 1,
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "fiscalYearStartMonth": 0,
+  "links": [],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "machine",
+        "label": "machine",
+        "type": "query",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "PD260F78FC8D02CC3"
+        },
+        "definition": "SELECT DISTINCT machine_name FROM signal ORDER BY machine_name",
+        "query": "SELECT DISTINCT machine_name FROM signal ORDER BY machine_name",
+        "refresh": 1,
+        "sort": 1,
+        "multi": true,
+        "includeAll": true,
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "options": [],
+        "hide": 0,
+        "skipUrlSync": false
+      },
+      {
+        "name": "signal",
+        "label": "signal",
+        "type": "query",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "PD260F78FC8D02CC3"
+        },
+        "definition": "SELECT DISTINCT signal_key FROM signal WHERE machine_name ~ '^${machine}$' ORDER BY signal_key",
+        "query": "SELECT DISTINCT signal_key FROM signal WHERE machine_name ~ '^${machine}$' ORDER BY signal_key",
+        "refresh": 1,
+        "sort": 1,
+        "multi": false,
+        "includeAll": false,
+        "current": {
+          "selected": true,
+          "text": "value.Boom.Angle",
+          "value": "value.Boom.Angle"
+        },
+        "options": [],
+        "hide": 0,
+        "skipUrlSync": false
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "${signal}",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "PD260F78FC8D02CC3"
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "interval": "1m",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PD260F78FC8D02CC3"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__dateBin(time) AS time,\n  machine_name,\n  avg(value) AS value\nFROM signal\nWHERE $__timeFilter(time)\n  AND signal_key = '${signal}'\n  AND machine_name ~ '^${machine}$'\nGROUP BY 1, 2\nORDER BY 1"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "auto",
+            "spanNulls": false,
+            "axisPlacement": "auto"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*/"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "${__field.labels.machine_name}"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "table",
+      "title": "Latest",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "PD260F78FC8D02CC3"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PD260F78FC8D02CC3"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  machine_name,\n  selector_last(value, time)['value'] AS value,\n  selector_last(value, time)['time'] AS time,\n  unit\nFROM signal\nWHERE signal_key = '${signal}'\n  AND machine_name ~ '^${machine}$'\nGROUP BY machine_name, unit\nORDER BY machine_name"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "machine_name"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "machine"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": ["sum"],
+          "countRows": false
+        }
+      }
+    }
+  ]
+}

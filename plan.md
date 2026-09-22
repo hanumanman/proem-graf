@@ -359,11 +359,11 @@ Implementation notes: `from = floor(now/bucket)*bucket - (overlap+1)*bucket`, `t
 
 Verify: `bun test` 12 pass ✅; dry-run tags/ns/grid-aligned ✅; live backfill 13 datapoints ✅; re-run same window stays 13 (idempotent) ✅.
 
-### Phase 4 — Dashboards
+### Phase 4 — Dashboards ✅
 
-Fleet overview + variables + time-series + latest-value table, provisioned from files.
+Fleet overview provisioned from `grafana/provisioning/dashboards/`. Variables: `machine` (multi, All) and `signal` (single, default `value.Boom.Angle`). Time-series: `$__dateBin` + `avg(value)`, one line per `machine_name`. Latest table: `selector_last` over stored points, not the dashboard range. Default range `now-7d` so the Sep 19 backfill is on screen. Machine filter is `machine_name ~ '^${machine}$'` because the Influx SQL plugin interpolates multi-values as a regex alternation, not a SQL `IN` list. Datasource uid stays generated (`PD260F78FC8D02CC3`); setting `uid` in the datasource YAML makes Grafana 13.2.1 exit.
 
-Verify: switch machines, graph moves.
+Verify: provisioned uid `fleet-overview` ✅; FlightSQL series + latest for `value.Boom.Angle` / `TCB - 2615 - Jed` ✅.
 
 ### Phase 5 — Alerting
 
