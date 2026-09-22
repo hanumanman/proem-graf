@@ -7,9 +7,14 @@
     "start": "bun --env-file=../.env src/cli/main.ts",
     "dry-run": "bun --env-file=../.env src/cli/main.ts --dry-run",
     "backfill": "bun --env-file=../.env src/cli/main.ts backfill",
-    "test": "bun test"
+    "test": "bun test",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check .",
+    "check:write": "biome check --write ."
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.14",
     "@types/bun": "latest"
   },
   "peerDependencies": {
