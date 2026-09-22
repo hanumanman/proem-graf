@@ -9,6 +9,7 @@
 - Dry run: `bun run dry-run` (poll once, print line protocol, no write)
 - Live: `bun run start`
 - Backfill: `bun run backfill <fromISO> <toISO>`
+- Influx query (run in root, `.env` loaded): `docker exec -e INFLUXDB3_AUTH_TOKEN=$INFLUX_ADMIN_TOKEN -i influxdb3-core influxdb3 query --database proemion "<SQL>"` (bare query 401s)
 
 ## Directory structure
 
