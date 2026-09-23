@@ -1,7 +1,9 @@
 {
   "uid": "fleet-overview",
   "title": "Fleet overview",
-  "tags": ["fleet"],
+  "tags": [
+    "fleet"
+  ],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,
@@ -60,24 +62,809 @@
       {
         "name": "signal",
         "label": "signal",
-        "type": "query",
+        "type": "custom",
         "datasource": {
           "type": "influxdb",
           "uid": "PD260F78FC8D02CC3"
         },
-        "definition": "SELECT DISTINCT signal_key FROM signal WHERE machine_name ~ '^${machine}$' ORDER BY signal_key",
-        "query": "SELECT DISTINCT signal_key FROM signal WHERE machine_name ~ '^${machine}$' ORDER BY signal_key",
-        "refresh": 1,
+        "definition": "Acceleration - Max : value.custom.cu.sensors.acc.max,ACS State : value.ACS.State,Anti-Cavitation Pressure : value.Anti-Cavitation.Pressure,Battery potential : value.common.machine.battery.potential,Boom Angle : value.Boom.Angle,Boom Angle Sensor State : value.Boom.Angle.Sensor.State,Crane Climbing Activated : value.Crane.Climbing.Activated,Emergency Stop Cabin : value.Emergency.Stop.Cabin,Emergency Stop Winches : value.Emergency.Stop.Winches,Emergency Stop X3 Control Panel : value.Emergency.Stop.X3.Control.Panel,Engine coolant temperature : value.common.engine.coolant.temperature,Engine Fuel Level State : value.Engine.Fuel.Level.State,Engine fuel rate : value.Engine.fuel.rate,Engine load in percent : value.common.engine.load.percent,Engine oil pressure : value.custom.engine.oil.pressure,Engine operating hours total : value.common.engine.hours.total,Engine Running : value.Engine.Running,Engine speed : value.common.engine.speed,Engine turbocharger boost pressure : value.Engine.turbocharge.boost.pressure,Fire Suppression System State : value.Fire.Suppression.System.State,Fly Brake State : value.Fly.Brake.State,Fly Down Encoder Limits  : value.Fly.Down.Encoder.Limits,Fly Down Motion : value.Fly.Down.Motion,Fly Down Safety System : value.Fly.Down.Safety.System,Fly Encoder Limit Bypass : value.Fly.Encoder.Limits.Bypass,Fly Lifts with a Load > 100% to ≤ 110% SWL : value.Fly.Lifts.with.a.Load._.100_.to._.110_.SWL,Fly Lifts with a Load > 110% SWL : value.Fly.Lifts.with.a.Load._.110_.SWL,Fly Lifts with a Load > 20% to ≤ 40% SWL : value.Fly.Lifts.with.a.Load._.20_.to._.40_.SWL,Fly Lifts with a Load > 40% to ≤ 60% SWL : value.Fly.Lifts.with.a.Load._.40_.to._.60_.SWL,Fly Lifts with a Load > 60% to ≤ 80% SWL : value.Fly.Lifts.with.a.Load._.60_.to._.80_.SWL,Fly Lifts with a Load > 80% to ≤ 100% SWL : value.Fly.Lifts.with.a.Load._.80_.to._.100_.SWL,Fly Lifts with a Load ≤ 20% SWL : value.Fly.Lifts.with.a.Load._.20_.SWL,Fly Load Value : value.Fly.Load.Value,Fly Safe Working Load : value.Fly.Safe.Working.Load,Fly Sensor State : value.Fly.Sensor.State,Fly Up Encoder Limits : value.Fly.Up.Encoder.Limits,Fly Up Motion : value.Fly.Up.Motion,Fly Up Safety System : value.Fly.Up.Safety.System,Fly Up Ultimate Limit : value.Fly.Up.Ultimate.Limit,Fly Up Ultimate Limit Bypass : value.Fly.Up.Ultimate.Limit.Bypass,Fly Winch Revolutions : value.Fly.Winch.Revolutions,Fly Winch Run Time : value.Fly.Winch.Run.Time,Fuel consumption total : value.common.engine.fuel.used.total,Gearbox Oil Temperature : value.Gearbox.Oil.Temperature,General Ultimate Limit : value.General.Ultimate.Limit,Hoist Brake State : value.Hoist.Brake.State,Hoist Down Encoder Limits : value.Hoist.Down.Encoder.Limits,Hoist Down Limits : value.Hoist.Down.Limits,Hoist Down Motion : value.Hoist.Down.Motion,Hoist Down Safety System : value.Hoist.Down.Safety.System,Hoist Encoder Limit Bypass : value.Hoist.Encoder.Limits.Bypass,Hoist Lifts with a Load > 100% to ≤ 110% SWL : value.Hoist.Lifts.with.a.Load._.100_.to._.110_.SWL,Hoist Lifts with a Load > 110% SWL : value.Hoist.Lifts.with.a.Load._.110_.SWL,Hoist Lifts with a Load > 20% to ≤ 40% SWL : value.Hoist.Lifts.with.a.Load._.20_.to._.40_.SWL,Hoist Lifts with a Load > 40% to ≤ 60% SWL : value.Hoist.Lifts.with.a.Load._.40_.to._.60_.SWL,Hoist Lifts with a Load > 60% to ≤ 80% SWL : value.Hoist.Lifts.with.a.Load._.60_.to._.80_.SWL,Hoist Lifts with a Load > 80% to ≤ 100% SWL : value.Hoist.Lifts.with.a.Load._.80_.to._.100_.SWL,Hoist Lifts with a Load ≤ 20% SWL : value.Hoist.Lifts.with.a.Load._.20_.SWL,Hoist Load : value.Hoist.Load,Hoist Safe Working Load : value.Hoist.Safe.Working.Load,Hoist Sensor State : value.Hoist.Sensor.State,Hoist Up Encoder Limits : value.Hoist.Up.Encoder.Limits,Hoist Up Limits : value.Hoist.Up.Limits,Hoist Up Motion : value.Hoist.Up.Motion,Hoist Up Safety System  : value.Hoist.Up.Safety.System,Hoist Up Ultimate Limit : value.Hoist.Up.Ultimate.Limit,Hoist Up Ultimate Limit Bypass : value.Hoist.Up.Ultimate.Limit.Bypass,Hoist Winch Revolutions : value.Hoist.Winch.Revolutions,Hoist Winch Run Time : value.Hoist.Winch.Run.Time,Hoist/Fly Winch Selected : value.Hoist_Fly.Winch.Selected,Hydraulic Buffers Proximity Switches Bypass : value.Hydraulic.Buffers.Proximity.Switches.Bypass,Hydraulic Oil Filters State : value.Hydraulic.Oil.Filters.State,Hydraulic Oil Level : value.Hydraulic.Oil.Level,Hydraulic Oil Temperature : value.Hydraulic.Oil.Temperature,Index Anti-Collision System Bypass Time : value.Index.Anti-Collision.System.Bypass.Time,Index Anti-Collision System Bypasses : value.Index.Anti-Collision.System.Bypasses,Index Fly Lifting with a Load > 100% to ≤ 110% SWL : value.Index.Fly.Lifting.with.a.Load._.100_.to._.110_.SWL,Index Fly Lifting with a Load > 110% SWL : value.Index.Fly.Lifting.with.a.Load._.110_.SWL,Index Fly Lifting with a Load > 20% to ≤ 40% SWL : value.Index.Fly.Lifting.with.a.Load._.20_.to._.40_.SWL,Index Fly Lifting with a Load > 40% to ≤ 60% SWL : value.Index.Fly.Lifting.with.a.Load._.40_.to._.60_.SWL,Index Fly Lifting with a Load > 60% to ≤ 80% SWL : value.Index.Fly.Lifting.with.a.Load._.60_.to._.80_.SWL,Index Fly Lifting with a Load > 80% to ≤ 100% SWL : value.Index.Fly.Lifting.with.a.Load._.80_.to._.100_.SWL,Index Fly Lifting with a Load ≤ 20% SWL : value.Index.Fly.Lifting.with.a.Load._.20_.SWL,Index Hoist Lifting with a Load > 100% to ≤ 110% SWL : value.Index.Hoist.Lifting.with.a.Load._.100_.to._.110_.SWL,Index Hoist Lifting with a Load > 110% SWL : value.Index.Hoist.Lifting.with.a.Load._.110_.SWL,Index Hoist Lifting with a Load > 20% to ≤ 40% SWL : value.Index.Hoist.Lifting.with.a.Load._.20_.to._.40_.SWL,Index Hoist Lifting with a Load > 40% to ≤ 60% SWL : value.Index.Hoist.Lifting.with.a.Load._.40_.to._.60_.SWL,Index Hoist Lifting with a Load > 60% to ≤ 80% SWL : value.Index.Hoist.Lifting.with.a.Load._.60_.to._.80_.SWL,Index Hoist Lifting with a Load > 80% to ≤ 100% SWL : value.Index.Hoist.Lifting.with.a.Load._.80_.to._.100_.SWL,Index Hoist Lifting with a Load ≤ 20% SWL : value.Index.Hoist.Lifting.with.a.Load._.20_.SWL,Index SLI System Bypass Time : value.Index.SLI.System.Bypass.Time,Index SLI System Bypasses : value.Index.SLI.System.Bypasses,Index Time at Engine Speed > Idle and No Load : value.Index.Time.at.Engine.Speed.Greater.Than.Idle.and.No.Load,Index Time at Engine Speed ≤ Idle and No Load : value.Index.Time.at.Engine.Speed._.Idle.and.No.Load,Index Used Fuel at Engine Speed > Idle and No Load : value.Index.Used.Fuel.at.Engine.Speed.Greater.Than.Idle.and.No.Load,Index Used Fuel at Engine Speed ≤ Idle and No Load : value.Index.Used.Fuel.at.Engine.Speed._.Idle.and.No.Load,Index Used Fuel at Fly Load > 100% to ≤ 110% SWL : value.Index.Used.Fuel.at.Fly.Load._.100_.to._.110_.SWL,Index Used Fuel at Fly Load > 110% SWL : value.Index.Used.Fuel.at.Fly.Load._.110_.SWL,Index Used Fuel at Fly Load > 20% to ≤ 40% SWL : value.Index.Used.Fuel.at.Fly.Load._.20_.to._.40_.SWL,Index Used Fuel at Fly Load > 40% to ≤ 60% SWL : value.Index.Used.Fuel.at.Fly.Load._.40_.to._.60_.SWL,Index Used Fuel at Fly Load > 60% to ≤ 80% SWL : value.Index.Used.Fuel.at.Fly.Load._.60_.to._.80_.SWL,Index Used Fuel at Fly Load > 80% to ≤ 100% SWL : value.Index.Used.Fuel.at.Fly.Load._.80_.to._.100_.SWL,Index Used Fuel at Fly Load ≤ 20% SWL : value.Index.Used.Fuel.at.Fly.Load._.20_.SWL,Index Used Fuel at Hoist Load > 100% to ≤ 110% SWL : value.Index.Used.Fuel.at.Hoist.Load._.100_.to._.110_.SWL,Index Used Fuel at Hoist Load > 110% SWL : value.Index.Used.Fuel.at.Hoist.Load._.110_.SWL,Index Used Fuel at Hoist Load > 20% to ≤ 40% SWL : value.Index.Used.Fuel.at.Hoist.Load._.20_.to._.40_.SWL,Index Used Fuel at Hoist Load > 40% to ≤ 60% SWL : value.Index.Used.Fuel.at.Hoist.Load._.40_.to._.60_.SWL,Index Used Fuel at Hoist Load > 60% to ≤ 80% SWL : value.Index.Used.Fuel.at.Hoist.Load._.60_.to._.80_.SWL,Index Used Fuel at Hoist Load > 80% to ≤ 100% SWL : value.Index.Used.Fuel.at.Hoist.Load._.80_.to._.100_.SWL,Index Used Fuel at Hoist Load ≤ 20% SWL : value.Index.Used.Fuel.at.Hoist.Load._.20_.SWL,Luff Brake State : value.Luff.Brake.State,Luff Encoder Limit Bypass : value.Luff.Encoder.Limits.Bypass,Luff In Encoder Limits : value.Luff.In.Encoder.Limits,Luff In Limits : value.Luff.In.Limits,Luff In Motion : value.Luff.In.Motion,Luff In Safety System : value.Luff.In.Safety.System,Luff In Ultimate Limit : value.Luff.In.Ultimate.Limit,Luff Out Encoder Limits : value.Luff.Out.Encoder.Limits,Luff Out Limits : value.Luff.Out.Limits,Luff Out Motion : value.Luff.Out.Motion,Luff Out Safety System : value.Luff.Out.Safety.System,Luff Out Ultimate Limit : value.Luff.Out.Ultimate.Limit,Luff Ratchet : value.Luff.Ratchet,Luff Ultimate Limit Bypass : value.Luff.Ultimate.Limits.Bypass,Luff Winch Revolutions : value.Luff.Winch.Revolutions,Luff Winch Run Time : value.Luff.Winch.Run.Time,Machine Ignition state : value.common.machine.ignitionswitch.state,Modem Data Transfer Mode : value.Modem_Data_Transfer_Mode,Port Hydraulic Buffer Proximity Switch : value.Port.Hydraulic.Buffer.Proximity.Switch,Safety System Fly Down Motion Stop Bypass : value.Safety.System.Fly.Down.Motion.Stop.Bypass,Safety System Hoist Down Motion Stop Bypass : value.Safety.System.Hoist.Down.Motion.Stop.Bypass,Safety System Luff Out Motion Stop Bypass : value.Safety.System.Luff.Out.Motion.Stop.Bypass,Sent 16 Bit Messages : value.Sent.16.Bit.Messages,Sent 32 Bit Messages : value.Sent.32.Bit.Messages,Sent 48 Bit Messages : value.Sent.48.Bit.Messages,Sent 8 Bit Messages : value.Sent.8.Bit.Messages,SIM traffic this month modem : value.common.cu.sim.traffic.month,Slack Rope : value.Slack.Rope,Slew Brake State : value.Slew.Brake.State,Slew Left Motion : value.Slew.Left.Motion,Slew Lock Proximity Switches Bypass : value.Slew.Lock.Proximity.Switches.Bypass,Slew Pin Locked : value.Slew.Pin.Locked,Slew Pin Unlocked : value.Slew.Pin.Unlocked,Slew Right Motion : value.Slew.Right.Motion,Slew Ring Revolutions : value.Slew.Ring.Revolutions,Slew Ring Run Time : value.Slew.Ring.Run.Time,SLI Bypass State : value.SLI.Bypass.State,SLI Communication State : value.SLI.Communication.State,SLI Motion Cut : value.SLI.Motion.Cut,Starboard Hydraulic Buffer Proximity Switch : value.Starboard.Hydraulic.Buffer.Proximity.Switch,System Ignition State : value.System.Ignition.State,Temperature CANlink mobile : value.common.cu.sensors.temperature,Wind Speed : value.Wind.Speed",
+        "query": "Acceleration - Max : value.custom.cu.sensors.acc.max,ACS State : value.ACS.State,Anti-Cavitation Pressure : value.Anti-Cavitation.Pressure,Battery potential : value.common.machine.battery.potential,Boom Angle : value.Boom.Angle,Boom Angle Sensor State : value.Boom.Angle.Sensor.State,Crane Climbing Activated : value.Crane.Climbing.Activated,Emergency Stop Cabin : value.Emergency.Stop.Cabin,Emergency Stop Winches : value.Emergency.Stop.Winches,Emergency Stop X3 Control Panel : value.Emergency.Stop.X3.Control.Panel,Engine coolant temperature : value.common.engine.coolant.temperature,Engine Fuel Level State : value.Engine.Fuel.Level.State,Engine fuel rate : value.Engine.fuel.rate,Engine load in percent : value.common.engine.load.percent,Engine oil pressure : value.custom.engine.oil.pressure,Engine operating hours total : value.common.engine.hours.total,Engine Running : value.Engine.Running,Engine speed : value.common.engine.speed,Engine turbocharger boost pressure : value.Engine.turbocharge.boost.pressure,Fire Suppression System State : value.Fire.Suppression.System.State,Fly Brake State : value.Fly.Brake.State,Fly Down Encoder Limits  : value.Fly.Down.Encoder.Limits,Fly Down Motion : value.Fly.Down.Motion,Fly Down Safety System : value.Fly.Down.Safety.System,Fly Encoder Limit Bypass : value.Fly.Encoder.Limits.Bypass,Fly Lifts with a Load > 100% to ≤ 110% SWL : value.Fly.Lifts.with.a.Load._.100_.to._.110_.SWL,Fly Lifts with a Load > 110% SWL : value.Fly.Lifts.with.a.Load._.110_.SWL,Fly Lifts with a Load > 20% to ≤ 40% SWL : value.Fly.Lifts.with.a.Load._.20_.to._.40_.SWL,Fly Lifts with a Load > 40% to ≤ 60% SWL : value.Fly.Lifts.with.a.Load._.40_.to._.60_.SWL,Fly Lifts with a Load > 60% to ≤ 80% SWL : value.Fly.Lifts.with.a.Load._.60_.to._.80_.SWL,Fly Lifts with a Load > 80% to ≤ 100% SWL : value.Fly.Lifts.with.a.Load._.80_.to._.100_.SWL,Fly Lifts with a Load ≤ 20% SWL : value.Fly.Lifts.with.a.Load._.20_.SWL,Fly Load Value : value.Fly.Load.Value,Fly Safe Working Load : value.Fly.Safe.Working.Load,Fly Sensor State : value.Fly.Sensor.State,Fly Up Encoder Limits : value.Fly.Up.Encoder.Limits,Fly Up Motion : value.Fly.Up.Motion,Fly Up Safety System : value.Fly.Up.Safety.System,Fly Up Ultimate Limit : value.Fly.Up.Ultimate.Limit,Fly Up Ultimate Limit Bypass : value.Fly.Up.Ultimate.Limit.Bypass,Fly Winch Revolutions : value.Fly.Winch.Revolutions,Fly Winch Run Time : value.Fly.Winch.Run.Time,Fuel consumption total : value.common.engine.fuel.used.total,Gearbox Oil Temperature : value.Gearbox.Oil.Temperature,General Ultimate Limit : value.General.Ultimate.Limit,Hoist Brake State : value.Hoist.Brake.State,Hoist Down Encoder Limits : value.Hoist.Down.Encoder.Limits,Hoist Down Limits : value.Hoist.Down.Limits,Hoist Down Motion : value.Hoist.Down.Motion,Hoist Down Safety System : value.Hoist.Down.Safety.System,Hoist Encoder Limit Bypass : value.Hoist.Encoder.Limits.Bypass,Hoist Lifts with a Load > 100% to ≤ 110% SWL : value.Hoist.Lifts.with.a.Load._.100_.to._.110_.SWL,Hoist Lifts with a Load > 110% SWL : value.Hoist.Lifts.with.a.Load._.110_.SWL,Hoist Lifts with a Load > 20% to ≤ 40% SWL : value.Hoist.Lifts.with.a.Load._.20_.to._.40_.SWL,Hoist Lifts with a Load > 40% to ≤ 60% SWL : value.Hoist.Lifts.with.a.Load._.40_.to._.60_.SWL,Hoist Lifts with a Load > 60% to ≤ 80% SWL : value.Hoist.Lifts.with.a.Load._.60_.to._.80_.SWL,Hoist Lifts with a Load > 80% to ≤ 100% SWL : value.Hoist.Lifts.with.a.Load._.80_.to._.100_.SWL,Hoist Lifts with a Load ≤ 20% SWL : value.Hoist.Lifts.with.a.Load._.20_.SWL,Hoist Load : value.Hoist.Load,Hoist Safe Working Load : value.Hoist.Safe.Working.Load,Hoist Sensor State : value.Hoist.Sensor.State,Hoist Up Encoder Limits : value.Hoist.Up.Encoder.Limits,Hoist Up Limits : value.Hoist.Up.Limits,Hoist Up Motion : value.Hoist.Up.Motion,Hoist Up Safety System  : value.Hoist.Up.Safety.System,Hoist Up Ultimate Limit : value.Hoist.Up.Ultimate.Limit,Hoist Up Ultimate Limit Bypass : value.Hoist.Up.Ultimate.Limit.Bypass,Hoist Winch Revolutions : value.Hoist.Winch.Revolutions,Hoist Winch Run Time : value.Hoist.Winch.Run.Time,Hoist/Fly Winch Selected : value.Hoist_Fly.Winch.Selected,Hydraulic Buffers Proximity Switches Bypass : value.Hydraulic.Buffers.Proximity.Switches.Bypass,Hydraulic Oil Filters State : value.Hydraulic.Oil.Filters.State,Hydraulic Oil Level : value.Hydraulic.Oil.Level,Hydraulic Oil Temperature : value.Hydraulic.Oil.Temperature,Index Anti-Collision System Bypass Time : value.Index.Anti-Collision.System.Bypass.Time,Index Anti-Collision System Bypasses : value.Index.Anti-Collision.System.Bypasses,Index Fly Lifting with a Load > 100% to ≤ 110% SWL : value.Index.Fly.Lifting.with.a.Load._.100_.to._.110_.SWL,Index Fly Lifting with a Load > 110% SWL : value.Index.Fly.Lifting.with.a.Load._.110_.SWL,Index Fly Lifting with a Load > 20% to ≤ 40% SWL : value.Index.Fly.Lifting.with.a.Load._.20_.to._.40_.SWL,Index Fly Lifting with a Load > 40% to ≤ 60% SWL : value.Index.Fly.Lifting.with.a.Load._.40_.to._.60_.SWL,Index Fly Lifting with a Load > 60% to ≤ 80% SWL : value.Index.Fly.Lifting.with.a.Load._.60_.to._.80_.SWL,Index Fly Lifting with a Load > 80% to ≤ 100% SWL : value.Index.Fly.Lifting.with.a.Load._.80_.to._.100_.SWL,Index Fly Lifting with a Load ≤ 20% SWL : value.Index.Fly.Lifting.with.a.Load._.20_.SWL,Index Hoist Lifting with a Load > 100% to ≤ 110% SWL : value.Index.Hoist.Lifting.with.a.Load._.100_.to._.110_.SWL,Index Hoist Lifting with a Load > 110% SWL : value.Index.Hoist.Lifting.with.a.Load._.110_.SWL,Index Hoist Lifting with a Load > 20% to ≤ 40% SWL : value.Index.Hoist.Lifting.with.a.Load._.20_.to._.40_.SWL,Index Hoist Lifting with a Load > 40% to ≤ 60% SWL : value.Index.Hoist.Lifting.with.a.Load._.40_.to._.60_.SWL,Index Hoist Lifting with a Load > 60% to ≤ 80% SWL : value.Index.Hoist.Lifting.with.a.Load._.60_.to._.80_.SWL,Index Hoist Lifting with a Load > 80% to ≤ 100% SWL : value.Index.Hoist.Lifting.with.a.Load._.80_.to._.100_.SWL,Index Hoist Lifting with a Load ≤ 20% SWL : value.Index.Hoist.Lifting.with.a.Load._.20_.SWL,Index SLI System Bypass Time : value.Index.SLI.System.Bypass.Time,Index SLI System Bypasses : value.Index.SLI.System.Bypasses,Index Time at Engine Speed > Idle and No Load : value.Index.Time.at.Engine.Speed.Greater.Than.Idle.and.No.Load,Index Time at Engine Speed ≤ Idle and No Load : value.Index.Time.at.Engine.Speed._.Idle.and.No.Load,Index Used Fuel at Engine Speed > Idle and No Load : value.Index.Used.Fuel.at.Engine.Speed.Greater.Than.Idle.and.No.Load,Index Used Fuel at Engine Speed ≤ Idle and No Load : value.Index.Used.Fuel.at.Engine.Speed._.Idle.and.No.Load,Index Used Fuel at Fly Load > 100% to ≤ 110% SWL : value.Index.Used.Fuel.at.Fly.Load._.100_.to._.110_.SWL,Index Used Fuel at Fly Load > 110% SWL : value.Index.Used.Fuel.at.Fly.Load._.110_.SWL,Index Used Fuel at Fly Load > 20% to ≤ 40% SWL : value.Index.Used.Fuel.at.Fly.Load._.20_.to._.40_.SWL,Index Used Fuel at Fly Load > 40% to ≤ 60% SWL : value.Index.Used.Fuel.at.Fly.Load._.40_.to._.60_.SWL,Index Used Fuel at Fly Load > 60% to ≤ 80% SWL : value.Index.Used.Fuel.at.Fly.Load._.60_.to._.80_.SWL,Index Used Fuel at Fly Load > 80% to ≤ 100% SWL : value.Index.Used.Fuel.at.Fly.Load._.80_.to._.100_.SWL,Index Used Fuel at Fly Load ≤ 20% SWL : value.Index.Used.Fuel.at.Fly.Load._.20_.SWL,Index Used Fuel at Hoist Load > 100% to ≤ 110% SWL : value.Index.Used.Fuel.at.Hoist.Load._.100_.to._.110_.SWL,Index Used Fuel at Hoist Load > 110% SWL : value.Index.Used.Fuel.at.Hoist.Load._.110_.SWL,Index Used Fuel at Hoist Load > 20% to ≤ 40% SWL : value.Index.Used.Fuel.at.Hoist.Load._.20_.to._.40_.SWL,Index Used Fuel at Hoist Load > 40% to ≤ 60% SWL : value.Index.Used.Fuel.at.Hoist.Load._.40_.to._.60_.SWL,Index Used Fuel at Hoist Load > 60% to ≤ 80% SWL : value.Index.Used.Fuel.at.Hoist.Load._.60_.to._.80_.SWL,Index Used Fuel at Hoist Load > 80% to ≤ 100% SWL : value.Index.Used.Fuel.at.Hoist.Load._.80_.to._.100_.SWL,Index Used Fuel at Hoist Load ≤ 20% SWL : value.Index.Used.Fuel.at.Hoist.Load._.20_.SWL,Luff Brake State : value.Luff.Brake.State,Luff Encoder Limit Bypass : value.Luff.Encoder.Limits.Bypass,Luff In Encoder Limits : value.Luff.In.Encoder.Limits,Luff In Limits : value.Luff.In.Limits,Luff In Motion : value.Luff.In.Motion,Luff In Safety System : value.Luff.In.Safety.System,Luff In Ultimate Limit : value.Luff.In.Ultimate.Limit,Luff Out Encoder Limits : value.Luff.Out.Encoder.Limits,Luff Out Limits : value.Luff.Out.Limits,Luff Out Motion : value.Luff.Out.Motion,Luff Out Safety System : value.Luff.Out.Safety.System,Luff Out Ultimate Limit : value.Luff.Out.Ultimate.Limit,Luff Ratchet : value.Luff.Ratchet,Luff Ultimate Limit Bypass : value.Luff.Ultimate.Limits.Bypass,Luff Winch Revolutions : value.Luff.Winch.Revolutions,Luff Winch Run Time : value.Luff.Winch.Run.Time,Machine Ignition state : value.common.machine.ignitionswitch.state,Modem Data Transfer Mode : value.Modem_Data_Transfer_Mode,Port Hydraulic Buffer Proximity Switch : value.Port.Hydraulic.Buffer.Proximity.Switch,Safety System Fly Down Motion Stop Bypass : value.Safety.System.Fly.Down.Motion.Stop.Bypass,Safety System Hoist Down Motion Stop Bypass : value.Safety.System.Hoist.Down.Motion.Stop.Bypass,Safety System Luff Out Motion Stop Bypass : value.Safety.System.Luff.Out.Motion.Stop.Bypass,Sent 16 Bit Messages : value.Sent.16.Bit.Messages,Sent 32 Bit Messages : value.Sent.32.Bit.Messages,Sent 48 Bit Messages : value.Sent.48.Bit.Messages,Sent 8 Bit Messages : value.Sent.8.Bit.Messages,SIM traffic this month modem : value.common.cu.sim.traffic.month,Slack Rope : value.Slack.Rope,Slew Brake State : value.Slew.Brake.State,Slew Left Motion : value.Slew.Left.Motion,Slew Lock Proximity Switches Bypass : value.Slew.Lock.Proximity.Switches.Bypass,Slew Pin Locked : value.Slew.Pin.Locked,Slew Pin Unlocked : value.Slew.Pin.Unlocked,Slew Right Motion : value.Slew.Right.Motion,Slew Ring Revolutions : value.Slew.Ring.Revolutions,Slew Ring Run Time : value.Slew.Ring.Run.Time,SLI Bypass State : value.SLI.Bypass.State,SLI Communication State : value.SLI.Communication.State,SLI Motion Cut : value.SLI.Motion.Cut,Starboard Hydraulic Buffer Proximity Switch : value.Starboard.Hydraulic.Buffer.Proximity.Switch,System Ignition State : value.System.Ignition.State,Temperature CANlink mobile : value.common.cu.sensors.temperature,Wind Speed : value.Wind.Speed",
         "sort": 1,
         "multi": false,
         "includeAll": false,
         "current": {
           "selected": true,
-          "text": "value.Boom.Angle",
+          "text": "Boom Angle",
           "value": "value.Boom.Angle"
         },
-        "options": [],
+        "options": [
+          {
+            "text": "Acceleration - Max",
+            "value": "value.custom.cu.sensors.acc.max",
+            "selected": false
+          },
+          {
+            "text": "ACS State",
+            "value": "value.ACS.State",
+            "selected": false
+          },
+          {
+            "text": "Anti-Cavitation Pressure",
+            "value": "value.Anti-Cavitation.Pressure",
+            "selected": false
+          },
+          {
+            "text": "Battery potential",
+            "value": "value.common.machine.battery.potential",
+            "selected": false
+          },
+          {
+            "text": "Boom Angle",
+            "value": "value.Boom.Angle",
+            "selected": true
+          },
+          {
+            "text": "Boom Angle Sensor State",
+            "value": "value.Boom.Angle.Sensor.State",
+            "selected": false
+          },
+          {
+            "text": "Crane Climbing Activated",
+            "value": "value.Crane.Climbing.Activated",
+            "selected": false
+          },
+          {
+            "text": "Emergency Stop Cabin",
+            "value": "value.Emergency.Stop.Cabin",
+            "selected": false
+          },
+          {
+            "text": "Emergency Stop Winches",
+            "value": "value.Emergency.Stop.Winches",
+            "selected": false
+          },
+          {
+            "text": "Emergency Stop X3 Control Panel",
+            "value": "value.Emergency.Stop.X3.Control.Panel",
+            "selected": false
+          },
+          {
+            "text": "Engine coolant temperature",
+            "value": "value.common.engine.coolant.temperature",
+            "selected": false
+          },
+          {
+            "text": "Engine Fuel Level State",
+            "value": "value.Engine.Fuel.Level.State",
+            "selected": false
+          },
+          {
+            "text": "Engine fuel rate",
+            "value": "value.Engine.fuel.rate",
+            "selected": false
+          },
+          {
+            "text": "Engine load in percent",
+            "value": "value.common.engine.load.percent",
+            "selected": false
+          },
+          {
+            "text": "Engine oil pressure",
+            "value": "value.custom.engine.oil.pressure",
+            "selected": false
+          },
+          {
+            "text": "Engine operating hours total",
+            "value": "value.common.engine.hours.total",
+            "selected": false
+          },
+          {
+            "text": "Engine Running",
+            "value": "value.Engine.Running",
+            "selected": false
+          },
+          {
+            "text": "Engine speed",
+            "value": "value.common.engine.speed",
+            "selected": false
+          },
+          {
+            "text": "Engine turbocharger boost pressure",
+            "value": "value.Engine.turbocharge.boost.pressure",
+            "selected": false
+          },
+          {
+            "text": "Fire Suppression System State",
+            "value": "value.Fire.Suppression.System.State",
+            "selected": false
+          },
+          {
+            "text": "Fly Brake State",
+            "value": "value.Fly.Brake.State",
+            "selected": false
+          },
+          {
+            "text": "Fly Down Encoder Limits ",
+            "value": "value.Fly.Down.Encoder.Limits",
+            "selected": false
+          },
+          {
+            "text": "Fly Down Motion",
+            "value": "value.Fly.Down.Motion",
+            "selected": false
+          },
+          {
+            "text": "Fly Down Safety System",
+            "value": "value.Fly.Down.Safety.System",
+            "selected": false
+          },
+          {
+            "text": "Fly Encoder Limit Bypass",
+            "value": "value.Fly.Encoder.Limits.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Fly Lifts with a Load > 100% to ≤ 110% SWL",
+            "value": "value.Fly.Lifts.with.a.Load._.100_.to._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Fly Lifts with a Load > 110% SWL",
+            "value": "value.Fly.Lifts.with.a.Load._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Fly Lifts with a Load > 20% to ≤ 40% SWL",
+            "value": "value.Fly.Lifts.with.a.Load._.20_.to._.40_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Fly Lifts with a Load > 40% to ≤ 60% SWL",
+            "value": "value.Fly.Lifts.with.a.Load._.40_.to._.60_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Fly Lifts with a Load > 60% to ≤ 80% SWL",
+            "value": "value.Fly.Lifts.with.a.Load._.60_.to._.80_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Fly Lifts with a Load > 80% to ≤ 100% SWL",
+            "value": "value.Fly.Lifts.with.a.Load._.80_.to._.100_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Fly Lifts with a Load ≤ 20% SWL",
+            "value": "value.Fly.Lifts.with.a.Load._.20_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Fly Load Value",
+            "value": "value.Fly.Load.Value",
+            "selected": false
+          },
+          {
+            "text": "Fly Safe Working Load",
+            "value": "value.Fly.Safe.Working.Load",
+            "selected": false
+          },
+          {
+            "text": "Fly Sensor State",
+            "value": "value.Fly.Sensor.State",
+            "selected": false
+          },
+          {
+            "text": "Fly Up Encoder Limits",
+            "value": "value.Fly.Up.Encoder.Limits",
+            "selected": false
+          },
+          {
+            "text": "Fly Up Motion",
+            "value": "value.Fly.Up.Motion",
+            "selected": false
+          },
+          {
+            "text": "Fly Up Safety System",
+            "value": "value.Fly.Up.Safety.System",
+            "selected": false
+          },
+          {
+            "text": "Fly Up Ultimate Limit",
+            "value": "value.Fly.Up.Ultimate.Limit",
+            "selected": false
+          },
+          {
+            "text": "Fly Up Ultimate Limit Bypass",
+            "value": "value.Fly.Up.Ultimate.Limit.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Fly Winch Revolutions",
+            "value": "value.Fly.Winch.Revolutions",
+            "selected": false
+          },
+          {
+            "text": "Fly Winch Run Time",
+            "value": "value.Fly.Winch.Run.Time",
+            "selected": false
+          },
+          {
+            "text": "Fuel consumption total",
+            "value": "value.common.engine.fuel.used.total",
+            "selected": false
+          },
+          {
+            "text": "Gearbox Oil Temperature",
+            "value": "value.Gearbox.Oil.Temperature",
+            "selected": false
+          },
+          {
+            "text": "General Ultimate Limit",
+            "value": "value.General.Ultimate.Limit",
+            "selected": false
+          },
+          {
+            "text": "Hoist Brake State",
+            "value": "value.Hoist.Brake.State",
+            "selected": false
+          },
+          {
+            "text": "Hoist Down Encoder Limits",
+            "value": "value.Hoist.Down.Encoder.Limits",
+            "selected": false
+          },
+          {
+            "text": "Hoist Down Limits",
+            "value": "value.Hoist.Down.Limits",
+            "selected": false
+          },
+          {
+            "text": "Hoist Down Motion",
+            "value": "value.Hoist.Down.Motion",
+            "selected": false
+          },
+          {
+            "text": "Hoist Down Safety System",
+            "value": "value.Hoist.Down.Safety.System",
+            "selected": false
+          },
+          {
+            "text": "Hoist Encoder Limit Bypass",
+            "value": "value.Hoist.Encoder.Limits.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Hoist Lifts with a Load > 100% to ≤ 110% SWL",
+            "value": "value.Hoist.Lifts.with.a.Load._.100_.to._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Hoist Lifts with a Load > 110% SWL",
+            "value": "value.Hoist.Lifts.with.a.Load._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Hoist Lifts with a Load > 20% to ≤ 40% SWL",
+            "value": "value.Hoist.Lifts.with.a.Load._.20_.to._.40_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Hoist Lifts with a Load > 40% to ≤ 60% SWL",
+            "value": "value.Hoist.Lifts.with.a.Load._.40_.to._.60_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Hoist Lifts with a Load > 60% to ≤ 80% SWL",
+            "value": "value.Hoist.Lifts.with.a.Load._.60_.to._.80_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Hoist Lifts with a Load > 80% to ≤ 100% SWL",
+            "value": "value.Hoist.Lifts.with.a.Load._.80_.to._.100_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Hoist Lifts with a Load ≤ 20% SWL",
+            "value": "value.Hoist.Lifts.with.a.Load._.20_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Hoist Load",
+            "value": "value.Hoist.Load",
+            "selected": false
+          },
+          {
+            "text": "Hoist Safe Working Load",
+            "value": "value.Hoist.Safe.Working.Load",
+            "selected": false
+          },
+          {
+            "text": "Hoist Sensor State",
+            "value": "value.Hoist.Sensor.State",
+            "selected": false
+          },
+          {
+            "text": "Hoist Up Encoder Limits",
+            "value": "value.Hoist.Up.Encoder.Limits",
+            "selected": false
+          },
+          {
+            "text": "Hoist Up Limits",
+            "value": "value.Hoist.Up.Limits",
+            "selected": false
+          },
+          {
+            "text": "Hoist Up Motion",
+            "value": "value.Hoist.Up.Motion",
+            "selected": false
+          },
+          {
+            "text": "Hoist Up Safety System ",
+            "value": "value.Hoist.Up.Safety.System",
+            "selected": false
+          },
+          {
+            "text": "Hoist Up Ultimate Limit",
+            "value": "value.Hoist.Up.Ultimate.Limit",
+            "selected": false
+          },
+          {
+            "text": "Hoist Up Ultimate Limit Bypass",
+            "value": "value.Hoist.Up.Ultimate.Limit.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Hoist Winch Revolutions",
+            "value": "value.Hoist.Winch.Revolutions",
+            "selected": false
+          },
+          {
+            "text": "Hoist Winch Run Time",
+            "value": "value.Hoist.Winch.Run.Time",
+            "selected": false
+          },
+          {
+            "text": "Hoist/Fly Winch Selected",
+            "value": "value.Hoist_Fly.Winch.Selected",
+            "selected": false
+          },
+          {
+            "text": "Hydraulic Buffers Proximity Switches Bypass",
+            "value": "value.Hydraulic.Buffers.Proximity.Switches.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Hydraulic Oil Filters State",
+            "value": "value.Hydraulic.Oil.Filters.State",
+            "selected": false
+          },
+          {
+            "text": "Hydraulic Oil Level",
+            "value": "value.Hydraulic.Oil.Level",
+            "selected": false
+          },
+          {
+            "text": "Hydraulic Oil Temperature",
+            "value": "value.Hydraulic.Oil.Temperature",
+            "selected": false
+          },
+          {
+            "text": "Index Anti-Collision System Bypass Time",
+            "value": "value.Index.Anti-Collision.System.Bypass.Time",
+            "selected": false
+          },
+          {
+            "text": "Index Anti-Collision System Bypasses",
+            "value": "value.Index.Anti-Collision.System.Bypasses",
+            "selected": false
+          },
+          {
+            "text": "Index Fly Lifting with a Load > 100% to ≤ 110% SWL",
+            "value": "value.Index.Fly.Lifting.with.a.Load._.100_.to._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Fly Lifting with a Load > 110% SWL",
+            "value": "value.Index.Fly.Lifting.with.a.Load._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Fly Lifting with a Load > 20% to ≤ 40% SWL",
+            "value": "value.Index.Fly.Lifting.with.a.Load._.20_.to._.40_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Fly Lifting with a Load > 40% to ≤ 60% SWL",
+            "value": "value.Index.Fly.Lifting.with.a.Load._.40_.to._.60_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Fly Lifting with a Load > 60% to ≤ 80% SWL",
+            "value": "value.Index.Fly.Lifting.with.a.Load._.60_.to._.80_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Fly Lifting with a Load > 80% to ≤ 100% SWL",
+            "value": "value.Index.Fly.Lifting.with.a.Load._.80_.to._.100_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Fly Lifting with a Load ≤ 20% SWL",
+            "value": "value.Index.Fly.Lifting.with.a.Load._.20_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Hoist Lifting with a Load > 100% to ≤ 110% SWL",
+            "value": "value.Index.Hoist.Lifting.with.a.Load._.100_.to._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Hoist Lifting with a Load > 110% SWL",
+            "value": "value.Index.Hoist.Lifting.with.a.Load._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Hoist Lifting with a Load > 20% to ≤ 40% SWL",
+            "value": "value.Index.Hoist.Lifting.with.a.Load._.20_.to._.40_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Hoist Lifting with a Load > 40% to ≤ 60% SWL",
+            "value": "value.Index.Hoist.Lifting.with.a.Load._.40_.to._.60_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Hoist Lifting with a Load > 60% to ≤ 80% SWL",
+            "value": "value.Index.Hoist.Lifting.with.a.Load._.60_.to._.80_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Hoist Lifting with a Load > 80% to ≤ 100% SWL",
+            "value": "value.Index.Hoist.Lifting.with.a.Load._.80_.to._.100_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Hoist Lifting with a Load ≤ 20% SWL",
+            "value": "value.Index.Hoist.Lifting.with.a.Load._.20_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index SLI System Bypass Time",
+            "value": "value.Index.SLI.System.Bypass.Time",
+            "selected": false
+          },
+          {
+            "text": "Index SLI System Bypasses",
+            "value": "value.Index.SLI.System.Bypasses",
+            "selected": false
+          },
+          {
+            "text": "Index Time at Engine Speed > Idle and No Load",
+            "value": "value.Index.Time.at.Engine.Speed.Greater.Than.Idle.and.No.Load",
+            "selected": false
+          },
+          {
+            "text": "Index Time at Engine Speed ≤ Idle and No Load",
+            "value": "value.Index.Time.at.Engine.Speed._.Idle.and.No.Load",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Engine Speed > Idle and No Load",
+            "value": "value.Index.Used.Fuel.at.Engine.Speed.Greater.Than.Idle.and.No.Load",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Engine Speed ≤ Idle and No Load",
+            "value": "value.Index.Used.Fuel.at.Engine.Speed._.Idle.and.No.Load",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Fly Load > 100% to ≤ 110% SWL",
+            "value": "value.Index.Used.Fuel.at.Fly.Load._.100_.to._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Fly Load > 110% SWL",
+            "value": "value.Index.Used.Fuel.at.Fly.Load._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Fly Load > 20% to ≤ 40% SWL",
+            "value": "value.Index.Used.Fuel.at.Fly.Load._.20_.to._.40_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Fly Load > 40% to ≤ 60% SWL",
+            "value": "value.Index.Used.Fuel.at.Fly.Load._.40_.to._.60_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Fly Load > 60% to ≤ 80% SWL",
+            "value": "value.Index.Used.Fuel.at.Fly.Load._.60_.to._.80_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Fly Load > 80% to ≤ 100% SWL",
+            "value": "value.Index.Used.Fuel.at.Fly.Load._.80_.to._.100_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Fly Load ≤ 20% SWL",
+            "value": "value.Index.Used.Fuel.at.Fly.Load._.20_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Hoist Load > 100% to ≤ 110% SWL",
+            "value": "value.Index.Used.Fuel.at.Hoist.Load._.100_.to._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Hoist Load > 110% SWL",
+            "value": "value.Index.Used.Fuel.at.Hoist.Load._.110_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Hoist Load > 20% to ≤ 40% SWL",
+            "value": "value.Index.Used.Fuel.at.Hoist.Load._.20_.to._.40_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Hoist Load > 40% to ≤ 60% SWL",
+            "value": "value.Index.Used.Fuel.at.Hoist.Load._.40_.to._.60_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Hoist Load > 60% to ≤ 80% SWL",
+            "value": "value.Index.Used.Fuel.at.Hoist.Load._.60_.to._.80_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Hoist Load > 80% to ≤ 100% SWL",
+            "value": "value.Index.Used.Fuel.at.Hoist.Load._.80_.to._.100_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Index Used Fuel at Hoist Load ≤ 20% SWL",
+            "value": "value.Index.Used.Fuel.at.Hoist.Load._.20_.SWL",
+            "selected": false
+          },
+          {
+            "text": "Luff Brake State",
+            "value": "value.Luff.Brake.State",
+            "selected": false
+          },
+          {
+            "text": "Luff Encoder Limit Bypass",
+            "value": "value.Luff.Encoder.Limits.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Luff In Encoder Limits",
+            "value": "value.Luff.In.Encoder.Limits",
+            "selected": false
+          },
+          {
+            "text": "Luff In Limits",
+            "value": "value.Luff.In.Limits",
+            "selected": false
+          },
+          {
+            "text": "Luff In Motion",
+            "value": "value.Luff.In.Motion",
+            "selected": false
+          },
+          {
+            "text": "Luff In Safety System",
+            "value": "value.Luff.In.Safety.System",
+            "selected": false
+          },
+          {
+            "text": "Luff In Ultimate Limit",
+            "value": "value.Luff.In.Ultimate.Limit",
+            "selected": false
+          },
+          {
+            "text": "Luff Out Encoder Limits",
+            "value": "value.Luff.Out.Encoder.Limits",
+            "selected": false
+          },
+          {
+            "text": "Luff Out Limits",
+            "value": "value.Luff.Out.Limits",
+            "selected": false
+          },
+          {
+            "text": "Luff Out Motion",
+            "value": "value.Luff.Out.Motion",
+            "selected": false
+          },
+          {
+            "text": "Luff Out Safety System",
+            "value": "value.Luff.Out.Safety.System",
+            "selected": false
+          },
+          {
+            "text": "Luff Out Ultimate Limit",
+            "value": "value.Luff.Out.Ultimate.Limit",
+            "selected": false
+          },
+          {
+            "text": "Luff Ratchet",
+            "value": "value.Luff.Ratchet",
+            "selected": false
+          },
+          {
+            "text": "Luff Ultimate Limit Bypass",
+            "value": "value.Luff.Ultimate.Limits.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Luff Winch Revolutions",
+            "value": "value.Luff.Winch.Revolutions",
+            "selected": false
+          },
+          {
+            "text": "Luff Winch Run Time",
+            "value": "value.Luff.Winch.Run.Time",
+            "selected": false
+          },
+          {
+            "text": "Machine Ignition state",
+            "value": "value.common.machine.ignitionswitch.state",
+            "selected": false
+          },
+          {
+            "text": "Modem Data Transfer Mode",
+            "value": "value.Modem_Data_Transfer_Mode",
+            "selected": false
+          },
+          {
+            "text": "Port Hydraulic Buffer Proximity Switch",
+            "value": "value.Port.Hydraulic.Buffer.Proximity.Switch",
+            "selected": false
+          },
+          {
+            "text": "Safety System Fly Down Motion Stop Bypass",
+            "value": "value.Safety.System.Fly.Down.Motion.Stop.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Safety System Hoist Down Motion Stop Bypass",
+            "value": "value.Safety.System.Hoist.Down.Motion.Stop.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Safety System Luff Out Motion Stop Bypass",
+            "value": "value.Safety.System.Luff.Out.Motion.Stop.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Sent 16 Bit Messages",
+            "value": "value.Sent.16.Bit.Messages",
+            "selected": false
+          },
+          {
+            "text": "Sent 32 Bit Messages",
+            "value": "value.Sent.32.Bit.Messages",
+            "selected": false
+          },
+          {
+            "text": "Sent 48 Bit Messages",
+            "value": "value.Sent.48.Bit.Messages",
+            "selected": false
+          },
+          {
+            "text": "Sent 8 Bit Messages",
+            "value": "value.Sent.8.Bit.Messages",
+            "selected": false
+          },
+          {
+            "text": "SIM traffic this month modem",
+            "value": "value.common.cu.sim.traffic.month",
+            "selected": false
+          },
+          {
+            "text": "Slack Rope",
+            "value": "value.Slack.Rope",
+            "selected": false
+          },
+          {
+            "text": "Slew Brake State",
+            "value": "value.Slew.Brake.State",
+            "selected": false
+          },
+          {
+            "text": "Slew Left Motion",
+            "value": "value.Slew.Left.Motion",
+            "selected": false
+          },
+          {
+            "text": "Slew Lock Proximity Switches Bypass",
+            "value": "value.Slew.Lock.Proximity.Switches.Bypass",
+            "selected": false
+          },
+          {
+            "text": "Slew Pin Locked",
+            "value": "value.Slew.Pin.Locked",
+            "selected": false
+          },
+          {
+            "text": "Slew Pin Unlocked",
+            "value": "value.Slew.Pin.Unlocked",
+            "selected": false
+          },
+          {
+            "text": "Slew Right Motion",
+            "value": "value.Slew.Right.Motion",
+            "selected": false
+          },
+          {
+            "text": "Slew Ring Revolutions",
+            "value": "value.Slew.Ring.Revolutions",
+            "selected": false
+          },
+          {
+            "text": "Slew Ring Run Time",
+            "value": "value.Slew.Ring.Run.Time",
+            "selected": false
+          },
+          {
+            "text": "SLI Bypass State",
+            "value": "value.SLI.Bypass.State",
+            "selected": false
+          },
+          {
+            "text": "SLI Communication State",
+            "value": "value.SLI.Communication.State",
+            "selected": false
+          },
+          {
+            "text": "SLI Motion Cut",
+            "value": "value.SLI.Motion.Cut",
+            "selected": false
+          },
+          {
+            "text": "Starboard Hydraulic Buffer Proximity Switch",
+            "value": "value.Starboard.Hydraulic.Buffer.Proximity.Switch",
+            "selected": false
+          },
+          {
+            "text": "System Ignition State",
+            "value": "value.System.Ignition.State",
+            "selected": false
+          },
+          {
+            "text": "Temperature CANlink mobile",
+            "value": "value.common.cu.sensors.temperature",
+            "selected": false
+          },
+          {
+            "text": "Wind Speed",
+            "value": "value.Wind.Speed",
+            "selected": false
+          }
+        ],
         "hide": 0,
+        "skipUrlSync": false,
+        "refresh": 1
+      },
+      {
+        "name": "unit_sym",
+        "label": "unit",
+        "type": "query",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "PD260F78FC8D02CC3"
+        },
+        "definition": "SELECT DISTINCT CASE unit WHEN 'predefined.unit.NUMBER' THEN '–' WHEN 'predefined.unit.PERCENT' THEN '%' WHEN 'predefined.unit.acceleration.G' THEN 'g' WHEN 'predefined.unit.angle.DEGREE' THEN '°' WHEN 'predefined.unit.datavolume.BYTE' THEN 'byte' WHEN 'predefined.unit.flow.LITER_PER_HOUR' THEN 'l/h' WHEN 'predefined.unit.mass.METRIC_TON' THEN 't' WHEN 'predefined.unit.pressure.KILOPASCAL' THEN 'kPa' WHEN 'predefined.unit.rotation.RPM' THEN 'rpm' WHEN 'predefined.unit.speed.METERS_PER_SECOND' THEN 'm/s' WHEN 'predefined.unit.temperature.CELSIUS' THEN '°C' WHEN 'predefined.unit.time.HOUR' THEN 'hr' WHEN 'predefined.unit.voltage.VOLT' THEN 'V' WHEN 'predefined.unit.volume.LITER' THEN 'l' ELSE unit END AS unit_sym FROM signal WHERE signal_key = '${signal}'",
+        "query": "SELECT DISTINCT CASE unit WHEN 'predefined.unit.NUMBER' THEN '–' WHEN 'predefined.unit.PERCENT' THEN '%' WHEN 'predefined.unit.acceleration.G' THEN 'g' WHEN 'predefined.unit.angle.DEGREE' THEN '°' WHEN 'predefined.unit.datavolume.BYTE' THEN 'byte' WHEN 'predefined.unit.flow.LITER_PER_HOUR' THEN 'l/h' WHEN 'predefined.unit.mass.METRIC_TON' THEN 't' WHEN 'predefined.unit.pressure.KILOPASCAL' THEN 'kPa' WHEN 'predefined.unit.rotation.RPM' THEN 'rpm' WHEN 'predefined.unit.speed.METERS_PER_SECOND' THEN 'm/s' WHEN 'predefined.unit.temperature.CELSIUS' THEN '°C' WHEN 'predefined.unit.time.HOUR' THEN 'hr' WHEN 'predefined.unit.voltage.VOLT' THEN 'V' WHEN 'predefined.unit.volume.LITER' THEN 'l' ELSE unit END AS unit_sym FROM signal WHERE signal_key = '${signal}'",
+        "refresh": 1,
+        "sort": 0,
+        "multi": false,
+        "includeAll": false,
+        "current": {},
+        "options": [],
+        "hide": 2,
         "skipUrlSync": false
       }
     ]
@@ -86,7 +873,7 @@
     {
       "id": 1,
       "type": "timeseries",
-      "title": "${signal}",
+      "title": "${signal:text} (${unit_sym})",
       "datasource": {
         "type": "influxdb",
         "uid": "PD260F78FC8D02CC3"
@@ -175,7 +962,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  machine_name,\n  selector_last(value, time)['value'] AS value,\n  selector_last(value, time)['time'] AS time,\n  unit\nFROM signal\nWHERE signal_key = '${signal}'\n  AND machine_name ~ '^${machine}$'\nGROUP BY machine_name, unit\nORDER BY machine_name"
+          "rawSql": "SELECT\n  machine_name,\n  selector_last(value, time)['value'] AS value,\n  selector_last(value, time)['time'] AS time,\n  CASE unit WHEN 'predefined.unit.NUMBER' THEN '–' WHEN 'predefined.unit.PERCENT' THEN '%' WHEN 'predefined.unit.acceleration.G' THEN 'g' WHEN 'predefined.unit.angle.DEGREE' THEN '°' WHEN 'predefined.unit.datavolume.BYTE' THEN 'byte' WHEN 'predefined.unit.flow.LITER_PER_HOUR' THEN 'l/h' WHEN 'predefined.unit.mass.METRIC_TON' THEN 't' WHEN 'predefined.unit.pressure.KILOPASCAL' THEN 'kPa' WHEN 'predefined.unit.rotation.RPM' THEN 'rpm' WHEN 'predefined.unit.speed.METERS_PER_SECOND' THEN 'm/s' WHEN 'predefined.unit.temperature.CELSIUS' THEN '°C' WHEN 'predefined.unit.time.HOUR' THEN 'hr' WHEN 'predefined.unit.voltage.VOLT' THEN 'V' WHEN 'predefined.unit.volume.LITER' THEN 'l' ELSE unit END AS unit\nFROM signal\nWHERE signal_key = '${signal}'\n  AND machine_name ~ '^${machine}$'\nGROUP BY machine_name, unit\nORDER BY machine_name"
         }
       ],
       "fieldConfig": {
@@ -220,7 +1007,9 @@
         "cellHeight": "sm",
         "footer": {
           "show": false,
-          "reducer": ["sum"],
+          "reducer": [
+            "sum"
+          ],
           "countRows": false
         }
       }

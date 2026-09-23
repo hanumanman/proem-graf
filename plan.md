@@ -363,7 +363,7 @@ Verify: `bun test` 12 pass ✅; dry-run tags/ns/grid-aligned ✅; live backfill 
 
 Fleet overview provisioned from `grafana/provisioning/dashboards/`. Variables: `machine` (multi, All) and `signal` (single, default `value.Boom.Angle`). Time-series: `$__dateBin` + `avg(value)`, one line per `machine_name`. Latest table: `selector_last` over stored points, not the dashboard range. Default range `now-7d` so the Sep 19 backfill is on screen. Machine filter is `machine_name ~ '^${machine}$'` because the Influx SQL plugin interpolates multi-values as a regex alternation, not a SQL `IN` list. Datasource uid stays generated (`PD260F78FC8D02CC3`); setting `uid` in the datasource YAML makes Grafana 13.2.1 exit.
 
-Verify: provisioned uid `fleet-overview` ✅; FlightSQL series + latest for `value.Boom.Angle` / `TCB - 2615 - Jed` ✅.
+Verify: provisioned uid `fleet-overview` ✅; FlightSQL series + latest for `value.Boom.Angle` / `TCB - 2615 - Jed` ✅. Human-readable labels: `signal` is a custom variable (text = API `label` from `discovery/signals.csv`, value = key; panel title `${signal:text}`), hidden `unit_sym` query variable maps raw `unit` keys to API `unit.label` symbols via SQL `CASE` (`m/s`, `°C`, …; `NUMBER` → `–`), same `CASE` in the Latest table. Static list: regen options from `signals.csv` when signals change; no collector/Influx change, series identity untouched.
 
 ### Phase 5 — Alerting
 
