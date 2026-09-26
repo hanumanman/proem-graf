@@ -163,6 +163,10 @@ main() {
     die "wrote .env from .env.example. Fill PROEMION_CLIENT_ID, PROEMION_CLIENT_SECRET, and GF_SECURITY_ADMIN_PASSWORD, then re-run."
   fi
 
+  if [ ! -r .env ] || [ ! -w .env ]; then
+    die ".env is not readable/writable by you (owner: $(ls -l .env | awk '{print $3}')). Run: sudo chown \"\$USER:\$USER\" .env && chmod 600 .env"
+  fi
+
   require_filled PROEMION_CLIENT_ID
   require_filled PROEMION_CLIENT_SECRET
   require_filled GF_SECURITY_ADMIN_PASSWORD
