@@ -1,0 +1,200 @@
+#!/bin/sh
+# First boot for a clone. Idempotent. Does not install Docker, does not use
+# sudo, and does not rotate an existing Influx operator token.
+set -eu
+
+die() {
+  printf '%s\n' "$1" >&2
+  exit 1
+}
+
+env_get() {
+  key=$1
+  file=$2
+  awk -F= -v k="$key" '
+    /^[[:space:]]*#/ { next }
+    {
+      name = $1
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", name)
+      if (name != k) next
+      v = substr($0, index($0, "=") + 1)
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", v)
+      gsub(/\r$/, "", v)
+      if (v ~ /^".*"$/) v = substr(v, 2, length(v) - 2)
+      else if (v ~ /^'\''.*'\''$/) v = substr(v, 2, length(v) - 2)
+      print v
+    }
+  ' "$file" | tail -n 1
+}
+
+env_set() {
+  key=$1
+  value=$2
+  file=$3
+  tmp=$(mktemp)
+  found=0
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in
+      "$key"=*)
+        printf '%s=%s\n' "$key" "$value"
+        found=1
+        ;;
+      *)
+        printf '%s\n' "$line"
+        ;;
+    esac
+  done <"$file" >"$tmp"
+  if [ "$found" -eq 0 ]; then
+    printf '%s=%s\n' "$key" "$value" >>"$tmp"
+  fi
+  mv "$tmp" "$file"
+}
+
+json_token() {
+  sed -n 's/.*"token"[[:space:]]*:[[:space:]]*"\(apiv3_[^"]*\)".*/\1/p' "$1" | head -n 1
+}
+
+require_filled() {
+  key=$1
+  if [ -z "$(env_get "$key" .env)" ]; then
+    die "$key is empty in .env"
+  fi
+}
+
+docker_hint() {
+  case "$(uname -s)" in
+    Linux) printf 'sudo usermod -aG docker %s && newgrp docker' "$(id -un)" ;;
+    Darwin) printf 'start Docker Desktop, then re-run' ;;
+    *) printf 'start the Docker daemon, then re-run' ;;
+  esac
+}
+
+require_docker() {
+  if ! command -v docker >/dev/null 2>&1; then
+    die "docker is not installed. Install Docker Engine and the Compose v2 plugin, then re-run."
+  fi
+  if ! docker compose version >/dev/null 2>&1; then
+    die "docker compose v2 is required. Install the Compose plugin, then re-run."
+  fi
+  if ! docker info >/dev/null 2>&1; then
+    err=$(docker info 2>&1 || true)
+    case "$err" in
+      *permission*denied* | *connect*docker*sock* | *denied*)
+        die "cannot talk to the Docker daemon. $(docker_hint)"
+        ;;
+      *)
+        die "cannot talk to the Docker daemon. $(docker_hint)"
+        ;;
+    esac
+  fi
+}
+
+wait_http() {
+  url=$1
+  want=$2
+  i=0
+  while [ "$i" -lt 90 ]; do
+    code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 2 "$url" 2>/dev/null || true)
+    if [ "$want" = "any" ]; then
+      if [ -n "$code" ] && [ "$code" != "000" ]; then
+        return 0
+      fi
+    elif [ "$code" = "$want" ]; then
+      return 0
+    fi
+    i=$((i + 1))
+    sleep 1
+  done
+  return 1
+}
+
+create_operator_token() {
+  body=$(mktemp)
+  code=$(curl -sS -o "$body" -w '%{http_code}' --max-time 15 \
+    -X POST -H 'Accept: application/json' \
+    http://127.0.0.1:8181/api/v3/configure/token/admin || true)
+  if [ "$code" = "401" ] || [ "$code" = "403" ]; then
+    rm -f "$body"
+    die "Influx already has an operator token, and INFLUX_ADMIN_TOKEN is empty. Paste the existing token into .env and re-run. This script will not create another."
+  fi
+  if [ "$code" != "200" ] && [ "$code" != "201" ]; then
+    rm -f "$body"
+    die "failed to create the Influx operator token (HTTP $code)"
+  fi
+  token=$(json_token "$body")
+  rm -f "$body"
+  if [ -z "$token" ]; then
+    die "Influx did not return an apiv3_ operator token"
+  fi
+  env_set INFLUX_ADMIN_TOKEN "$token" .env
+  chmod 600 .env
+  printf '%s' "$token"
+}
+
+ensure_database() {
+  token=$1
+  list=$(docker exec -e INFLUXDB3_AUTH_TOKEN="$token" influxdb3-core \
+    influxdb3 show databases --format json) || die "could not list Influx databases"
+  if printf '%s' "$list" | grep -q '"name"[[:space:]]*:[[:space:]]*"proemion"'; then
+    return 0
+  fi
+  if docker exec -e INFLUXDB3_AUTH_TOKEN="$token" influxdb3-core \
+    influxdb3 create database proemion; then
+    return 0
+  fi
+  list=$(docker exec -e INFLUXDB3_AUTH_TOKEN="$token" influxdb3-core \
+    influxdb3 show databases --format json) || die "could not create database proemion"
+  if printf '%s' "$list" | grep -q '"name"[[:space:]]*:[[:space:]]*"proemion"'; then
+    return 0
+  fi
+  die "could not create database proemion"
+}
+
+main() {
+  cd "$(dirname "$0")"
+  if ! command -v curl >/dev/null 2>&1; then
+    die "curl is required"
+  fi
+  require_docker
+
+  if [ ! -f .env ]; then
+    cp .env.example .env
+    chmod 600 .env
+    die "wrote .env from .env.example. Fill PROEMION_CLIENT_ID, PROEMION_CLIENT_SECRET, and GF_SECURITY_ADMIN_PASSWORD, then re-run."
+  fi
+
+  require_filled PROEMION_CLIENT_ID
+  require_filled PROEMION_CLIENT_SECRET
+  require_filled GF_SECURITY_ADMIN_PASSWORD
+
+  docker compose up -d influxdb3-core
+  if ! wait_http http://127.0.0.1:8181/ping any; then
+    die "Influx did not accept connections on 127.0.0.1:8181"
+  fi
+
+  wrote_token=0
+  token=$(env_get INFLUX_ADMIN_TOKEN .env)
+  if [ -z "$token" ]; then
+    token=$(create_operator_token)
+    wrote_token=1
+  fi
+
+  ensure_database "$token"
+
+  if [ "$wrote_token" -eq 1 ]; then
+    docker compose up -d --force-recreate --no-deps grafana collector
+  else
+    docker compose up -d
+  fi
+
+  if ! wait_http http://127.0.0.1:3000/api/health 200; then
+    die "Grafana did not become healthy. If port 3000 is taken, stop whatever owns it and re-run. docker compose logs grafana"
+  fi
+
+  printf '%s\n' "Grafana is up at http://127.0.0.1:3000 (published on port 3000, user admin, password in .env)."
+  printf '%s\n' "Influx is on 127.0.0.1:8181. Collector is starting; first boot runs bun install."
+}
+
+if [ -z "${BOOTSTRAP_LIB:-}" ]; then
+  main "$@"
+fi

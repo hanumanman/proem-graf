@@ -1,8 +1,9 @@
 apiVersion: 1
 
-# Leave uid unset. Grafana 13.2.1 exits if this file sets a uid that is
-# not already stored. Dashboard JSON binds to the generated uid
-# PD260F78FC8D02CC3.
+# Leave uid unset. Grafana 13.2.1 derives it from the name
+# (sha256("InfluxDB-Proemion")[:8], P prefix): PD260F78FC8D02CC3.
+# A new volume gets the same uid. Pinning a uid that is not already
+# stored makes Grafana exit. Do not rename this datasource.
 datasources:
   - name: InfluxDB-Proemion
     type: influxdb

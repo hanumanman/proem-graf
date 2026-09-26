@@ -10,23 +10,22 @@ description: Work with Grafana dashboards, datasource, and InfluxDB SQL queries 
 Compose container `grafana` on `:3000` is source of truth. Provisioned from
 `grafana/provisioning/`, no click-ops.
 
-A brew Grafana exists as launch agent `com.proemion.grafana`. It is stopped.
-It steals port 3000 and its data is stale. Never start it. If the container
-fails to bind `:3000`, check `lsof -nP -iTCP:3000` and boot out that agent.
+If the container fails to bind `:3000`, something else owns that port.
+Stop that process and re-run. Do not assume what it is.
 
 ## Datasource
 
-Name `InfluxDB-Proemion`, type `influxdb`, generated uid
-`PD260F78FC8D02CC3`. File: `grafana/provisioning/datasources/influxdb.yaml`.
+Name `InfluxDB-Proemion`, type `influxdb`. File:
+`grafana/provisioning/datasources/influxdb.yaml`.
 
-Rules:
-
-- Leave `uid` unset in that YAML. Grafana 13.2.1 exits on startup with
-  `Datasource provisioning error: data source not found` if the file sets a
-  uid that is not already stored.
-- Dashboard JSON binds the generated uid in every `datasource` ref
-  (variables, panels, targets). If the volume is ever recreated and the uid
-  changes, update the JSON to match.
+Leave `uid` unset. Grafana 13.2.1 derives it from the name
+(`sha256("InfluxDB-Proemion")[:8]`, `P` prefix) in
+`pkg/services/provisioning/datasources/types.go` `safeUIDFromName`.
+That value is `PD260F78FC8D02CC3`. A new volume gets the same uid as long
+as the name stays `InfluxDB-Proemion`. Pinning a uid that is not already
+stored makes Grafana exit with `Datasource provisioning error: data source
+not found`. Dashboard JSON binds this derived uid. Do not rename the
+datasource.
 
 ## Dashboards
 
