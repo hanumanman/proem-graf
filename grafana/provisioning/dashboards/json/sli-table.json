@@ -1,0 +1,285 @@
+{
+  "uid": "sli-table",
+  "title": "SLI table",
+  "tags": [
+    "sli"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "editable": true,
+  "graphTooltip": 0,
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "fiscalYearStartMonth": 0,
+  "links": [],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "machine",
+        "label": "machine",
+        "type": "query",
+        "datasource": {
+          "type": "influxdb",
+          "uid": "PD260F78FC8D02CC3"
+        },
+        "definition": "SELECT DISTINCT machine_name FROM signal ORDER BY machine_name",
+        "query": "SELECT DISTINCT machine_name FROM signal ORDER BY machine_name",
+        "refresh": 1,
+        "sort": 1,
+        "multi": false,
+        "includeAll": false,
+        "current": {},
+        "options": [],
+        "hide": 0,
+        "skipUrlSync": false
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "table",
+      "title": "${machine}",
+      "description": "One row per minute. A blank cell means that signal did not report in that minute. Load % of SWL is hoist load divided by hoist SWL.",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "PD260F78FC8D02CC3"
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PD260F78FC8D02CC3"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_bin(INTERVAL '1 minute', time) AS time,\n  MAX(CASE WHEN signal_key = 'value.Hoist.Load' THEN value END) AS hoist_load,\n  MAX(CASE WHEN signal_key = 'value.Hoist.Safe.Working.Load' THEN value END) AS hoist_swl,\n  MAX(CASE WHEN signal_key = 'value.Hoist.Load' THEN value END)\n    / NULLIF(MAX(CASE WHEN signal_key = 'value.Hoist.Safe.Working.Load' THEN value END), 0) * 100 AS load_pct,\n  MAX(CASE WHEN signal_key = 'value.Boom.Angle' THEN value END) AS boom_angle,\n  MAX(CASE WHEN signal_key = 'value.Wind.Speed' THEN value END) AS wind,\n  MAX(CASE WHEN signal_key = 'value.SLI.Bypass.State' THEN value END) AS sli_bypass,\n  MAX(CASE WHEN signal_key = 'value.SLI.Motion.Cut' THEN value END) AS sli_motion_cut,\n  MAX(CASE WHEN signal_key = 'value.SLI.Communication.State' THEN value END) AS sli_comm\nFROM signal\nWHERE $__timeFilter(time)\n  AND machine_name = '${machine}'\n  AND signal_key IN (\n    'value.Hoist.Load',\n    'value.Hoist.Safe.Working.Load',\n    'value.Boom.Angle',\n    'value.Wind.Speed',\n    'value.SLI.Bypass.State',\n    'value.SLI.Motion.Cut',\n    'value.SLI.Communication.State'\n  )\nGROUP BY 1\nORDER BY 1 DESC"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "noValue": "-"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Date and Time"
+              },
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hoist_load"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Load"
+              },
+              {
+                "id": "unit",
+                "value": "masst"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hoist_swl"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "SWL"
+              },
+              {
+                "id": "unit",
+                "value": "masst"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "load_pct"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Load % of SWL"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "boom_angle"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Boom Angle"
+              },
+              {
+                "id": "unit",
+                "value": "degree"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sli_bypass"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "SLI Bypass"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sli_motion_cut"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "SLI Motion Cut"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sli_comm"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "SLI Communication"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "sortBy": [
+          {
+            "displayName": "Date and Time",
+            "desc": true
+          }
+        ],
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false
+        }
+      }
+    }
+  ]
+}
