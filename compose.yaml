@@ -10,8 +10,13 @@ services:
       - --node-id=node0
       - --object-store=file
       - --data-dir=/var/lib/influxdb3
+      # Default 432 files ~= 3 days. 9000 covers a 58-day window at the
+      # 144 files/day ceiling (58 * 144 = 8352). Raising the cap trades the
+      # file-limit error for an OOM ceiling; mem_limit contains that.
+      - --query-file-limit=9000
     volumes:
       - influxdb3-data:/var/lib/influxdb3
+    mem_limit: 4g
     restart: unless-stopped
     logging:
       driver: json-file

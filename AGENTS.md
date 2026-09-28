@@ -29,6 +29,7 @@
 - Upsert identity: measurement `signal`, tags `{machine_id, machine_name, signal_key, unit}`, timestamp `ms * 1e6` exact, field `value` always float. Re-write same window = same state.
 - Never put volatile data in tags. Never re-align returned `time`.
 - Caps: 350 queries/request, 25000 buckets/request, `limit: 10000`, backfill chunks of 1440 buckets (well under 25000).
+- Influx query file cap: `--query-file-limit=9000` (~58 days at ≤144 files/day). Every query needs a time bound — unbounded or heavy queries hit an OOM ceiling before the cap. Influx service runs `mem_limit: 4g`.
 - Truncated range (`totalDatapoints > timeseries.length`) aborts loudly, never stores a gap.
 - Failure: log, do not advance `lastTo`, retry next tick. Loop never crashes.
 - Logs: `createLogger(scope)` per module (`loop`, `poll`, `targets`, `discover`). No bare `console.*` in `src/` except `StdoutWriter` (dry-run output path, not logging).

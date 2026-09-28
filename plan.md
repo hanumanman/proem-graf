@@ -269,6 +269,28 @@ First start: admin endpoint unauthenticated until operator token created. Bind t
 
 Set at DB creation, **immutable** in Core. Default infinite. Min `1h`. Start infinite (7 machines = tiny volume). To change: create new DB + repoint, or Enterprise.
 
+### Query file limit and memory
+
+Core caps each query at `--query-file-limit` Parquet files (default `432`). At the default `gen1-duration` of 10 minutes that is ~3 days; a wider query fails with `Query would scan N Parquet files, exceeding the file limit`. Core has no compactor, so files accrue at up to 144/day (one per 10-minute bucket).
+
+We raise the limit to `9000`. A **fixed-length** window has a bounded file count (`days × 144`), so 58 days ≤ 8352 files always fits — it does not decay as total data grows. Observed density ~136 files/day. The cost is memory: the file cap becomes an **OOM ceiling** that depends on query shape, not just range. Measured on a 58-day copy under a 2 GiB cap:
+
+| Query shape (58d, 7899 files) | Peak | Result |
+| ----------------------------- | ---- | ------ |
+| `count(value)`                | 447 MiB | ok |
+| `date_bin(...) + GROUP BY`    | ~1.9 GiB | ok, 93% of cap |
+| `SELECT *`                    | — | OOM, exit 137 |
+
+Aggregations survive; raw/wide materialization does not. Grafana fires several panels at once, so spikes add up.
+
+Consequences:
+
+- Every query must carry a time bound. Unbounded queries (`SELECT min(time)`, the old variable queries) scan all files and grow without limit.
+- Keep dashboards within ~58 days. Default range stays `now-72h`.
+- `mem_limit: 4g` on the Influx service so an OOM is a contained restart, not an 8 GiB VM-wide squeeze.
+
+Proper fix is compaction: InfluxDB 3 **Enterprise** merges gen1 files; Core cannot. See config-options `#query-file-limit` and `#gen1-duration`.
+
 ### Query (SQL via DataFusion; no Flux — deprecated)
 
 ```sql
@@ -361,7 +383,7 @@ Verify: `bun test` 12 pass ✅; dry-run tags/ns/grid-aligned ✅; live backfill 
 
 ### Phase 4 — Dashboards ✅
 
-Fleet overview provisioned from `grafana/provisioning/dashboards/`. Variables: `machine` (multi, All) and `signal` (single, default `value.Boom.Angle`). Time-series: `$__dateBin` + `avg(value)`, one line per `machine_name`. Latest table: `selector_last` over stored points, not the dashboard range. Default range `now-7d` so the Sep 19 backfill is on screen. Machine filter is `machine_name ~ '^${machine}$'` because the Influx SQL plugin interpolates multi-values as a regex alternation, not a SQL `IN` list. Datasource uid stays generated (`PD260F78FC8D02CC3`); setting `uid` in the datasource YAML makes Grafana 13.2.1 exit.
+Fleet overview provisioned from `grafana/provisioning/dashboards/`. Variables: `machine` (multi, All) and `signal` (single, default `value.Boom.Angle`). Time-series: `$__dateBin` + `avg(value)`, one line per `machine_name`. Latest table: `selector_last` over stored points, not the dashboard range. Default range `now-72h`; variable and Latest queries are bounded to 72h (see §3, query file limit). Machine filter is `machine_name ~ '^${machine}$'` because the Influx SQL plugin interpolates multi-values as a regex alternation, not a SQL `IN` list. Datasource uid stays generated (`PD260F78FC8D02CC3`); setting `uid` in the datasource YAML makes Grafana 13.2.1 exit.
 
 Verify: provisioned uid `fleet-overview` ✅; FlightSQL series + latest for `value.Boom.Angle` / `TCB - 2615 - Jed` ✅. Human-readable labels: `signal` is a custom variable (text = API `label` from `discovery/signals.csv`, value = key; panel title `${signal:text}`), hidden `unit_sym` query variable maps raw `unit` keys to API `unit.label` symbols via SQL `CASE` (`m/s`, `°C`, …; `NUMBER` → `–`), same `CASE` in the Latest table. Static list: regen options from `signals.csv` when signals change; no collector/Influx change, series identity untouched.
 
