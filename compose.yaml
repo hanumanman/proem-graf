@@ -25,10 +25,13 @@ services:
     image: grafana/grafana:13.2.1
     container_name: grafana
     ports:
-      - "3000:3000"
+      # Loopback only. Public reach goes through the tunnel, never the LAN.
+      - "127.0.0.1:3000:3000"
     environment:
       GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
       INFLUX_ADMIN_TOKEN: ${INFLUX_ADMIN_TOKEN}
+      # Public URL, so an idle browser tab should not keep a session alive for a week.
+      GF_AUTH_LOGIN_MAXIMUM_INACTIVE_LIFETIME_DURATION: 24h
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
