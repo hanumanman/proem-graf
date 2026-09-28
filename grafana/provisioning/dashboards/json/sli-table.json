@@ -11,7 +11,7 @@
   "editable": true,
   "graphTooltip": 0,
   "time": {
-    "from": "now-7d",
+    "from": "now-72h",
     "to": "now"
   },
   "timepicker": {},
@@ -43,8 +43,8 @@
           "type": "influxdb",
           "uid": "PD260F78FC8D02CC3"
         },
-        "definition": "SELECT DISTINCT machine_name FROM signal ORDER BY machine_name",
-        "query": "SELECT DISTINCT machine_name FROM signal ORDER BY machine_name",
+        "definition": "SELECT DISTINCT machine_name FROM signal WHERE time >= now() - INTERVAL '72 hours' ORDER BY machine_name",
+        "query": "SELECT DISTINCT machine_name FROM signal WHERE time >= now() - INTERVAL '72 hours' ORDER BY machine_name",
         "refresh": 1,
         "sort": 1,
         "multi": false,

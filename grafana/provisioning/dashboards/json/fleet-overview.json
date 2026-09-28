@@ -11,7 +11,7 @@
   "editable": true,
   "graphTooltip": 1,
   "time": {
-    "from": "now-7d",
+    "from": "now-72h",
     "to": "now"
   },
   "timepicker": {},
@@ -43,8 +43,8 @@
           "type": "influxdb",
           "uid": "PD260F78FC8D02CC3"
         },
-        "definition": "SELECT DISTINCT machine_name FROM signal ORDER BY machine_name",
-        "query": "SELECT DISTINCT machine_name FROM signal ORDER BY machine_name",
+        "definition": "SELECT DISTINCT machine_name FROM signal WHERE time >= now() - INTERVAL '72 hours' ORDER BY machine_name",
+        "query": "SELECT DISTINCT machine_name FROM signal WHERE time >= now() - INTERVAL '72 hours' ORDER BY machine_name",
         "refresh": 1,
         "sort": 1,
         "multi": true,
@@ -856,8 +856,8 @@
           "type": "influxdb",
           "uid": "PD260F78FC8D02CC3"
         },
-        "definition": "SELECT DISTINCT CASE unit WHEN 'predefined.unit.NUMBER' THEN '–' WHEN 'predefined.unit.PERCENT' THEN '%' WHEN 'predefined.unit.acceleration.G' THEN 'g' WHEN 'predefined.unit.angle.DEGREE' THEN '°' WHEN 'predefined.unit.datavolume.BYTE' THEN 'byte' WHEN 'predefined.unit.flow.LITER_PER_HOUR' THEN 'l/h' WHEN 'predefined.unit.mass.METRIC_TON' THEN 't' WHEN 'predefined.unit.pressure.KILOPASCAL' THEN 'kPa' WHEN 'predefined.unit.rotation.RPM' THEN 'rpm' WHEN 'predefined.unit.speed.METERS_PER_SECOND' THEN 'm/s' WHEN 'predefined.unit.temperature.CELSIUS' THEN '°C' WHEN 'predefined.unit.time.HOUR' THEN 'hr' WHEN 'predefined.unit.voltage.VOLT' THEN 'V' WHEN 'predefined.unit.volume.LITER' THEN 'l' ELSE unit END AS unit_sym FROM signal WHERE signal_key = '${signal}'",
-        "query": "SELECT DISTINCT CASE unit WHEN 'predefined.unit.NUMBER' THEN '–' WHEN 'predefined.unit.PERCENT' THEN '%' WHEN 'predefined.unit.acceleration.G' THEN 'g' WHEN 'predefined.unit.angle.DEGREE' THEN '°' WHEN 'predefined.unit.datavolume.BYTE' THEN 'byte' WHEN 'predefined.unit.flow.LITER_PER_HOUR' THEN 'l/h' WHEN 'predefined.unit.mass.METRIC_TON' THEN 't' WHEN 'predefined.unit.pressure.KILOPASCAL' THEN 'kPa' WHEN 'predefined.unit.rotation.RPM' THEN 'rpm' WHEN 'predefined.unit.speed.METERS_PER_SECOND' THEN 'm/s' WHEN 'predefined.unit.temperature.CELSIUS' THEN '°C' WHEN 'predefined.unit.time.HOUR' THEN 'hr' WHEN 'predefined.unit.voltage.VOLT' THEN 'V' WHEN 'predefined.unit.volume.LITER' THEN 'l' ELSE unit END AS unit_sym FROM signal WHERE signal_key = '${signal}'",
+        "definition": "SELECT DISTINCT CASE unit WHEN 'predefined.unit.NUMBER' THEN '–' WHEN 'predefined.unit.PERCENT' THEN '%' WHEN 'predefined.unit.acceleration.G' THEN 'g' WHEN 'predefined.unit.angle.DEGREE' THEN '°' WHEN 'predefined.unit.datavolume.BYTE' THEN 'byte' WHEN 'predefined.unit.flow.LITER_PER_HOUR' THEN 'l/h' WHEN 'predefined.unit.mass.METRIC_TON' THEN 't' WHEN 'predefined.unit.pressure.KILOPASCAL' THEN 'kPa' WHEN 'predefined.unit.rotation.RPM' THEN 'rpm' WHEN 'predefined.unit.speed.METERS_PER_SECOND' THEN 'm/s' WHEN 'predefined.unit.temperature.CELSIUS' THEN '°C' WHEN 'predefined.unit.time.HOUR' THEN 'hr' WHEN 'predefined.unit.voltage.VOLT' THEN 'V' WHEN 'predefined.unit.volume.LITER' THEN 'l' ELSE unit END AS unit_sym FROM signal WHERE signal_key = '${signal}' AND time >= now() - INTERVAL '72 hours'",
+        "query": "SELECT DISTINCT CASE unit WHEN 'predefined.unit.NUMBER' THEN '–' WHEN 'predefined.unit.PERCENT' THEN '%' WHEN 'predefined.unit.acceleration.G' THEN 'g' WHEN 'predefined.unit.angle.DEGREE' THEN '°' WHEN 'predefined.unit.datavolume.BYTE' THEN 'byte' WHEN 'predefined.unit.flow.LITER_PER_HOUR' THEN 'l/h' WHEN 'predefined.unit.mass.METRIC_TON' THEN 't' WHEN 'predefined.unit.pressure.KILOPASCAL' THEN 'kPa' WHEN 'predefined.unit.rotation.RPM' THEN 'rpm' WHEN 'predefined.unit.speed.METERS_PER_SECOND' THEN 'm/s' WHEN 'predefined.unit.temperature.CELSIUS' THEN '°C' WHEN 'predefined.unit.time.HOUR' THEN 'hr' WHEN 'predefined.unit.voltage.VOLT' THEN 'V' WHEN 'predefined.unit.volume.LITER' THEN 'l' ELSE unit END AS unit_sym FROM signal WHERE signal_key = '${signal}' AND time >= now() - INTERVAL '72 hours'",
         "refresh": 1,
         "sort": 0,
         "multi": false,
@@ -962,7 +962,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  machine_name,\n  selector_last(value, time)['value'] AS value,\n  selector_last(value, time)['time'] AS time,\n  CASE unit WHEN 'predefined.unit.NUMBER' THEN '–' WHEN 'predefined.unit.PERCENT' THEN '%' WHEN 'predefined.unit.acceleration.G' THEN 'g' WHEN 'predefined.unit.angle.DEGREE' THEN '°' WHEN 'predefined.unit.datavolume.BYTE' THEN 'byte' WHEN 'predefined.unit.flow.LITER_PER_HOUR' THEN 'l/h' WHEN 'predefined.unit.mass.METRIC_TON' THEN 't' WHEN 'predefined.unit.pressure.KILOPASCAL' THEN 'kPa' WHEN 'predefined.unit.rotation.RPM' THEN 'rpm' WHEN 'predefined.unit.speed.METERS_PER_SECOND' THEN 'm/s' WHEN 'predefined.unit.temperature.CELSIUS' THEN '°C' WHEN 'predefined.unit.time.HOUR' THEN 'hr' WHEN 'predefined.unit.voltage.VOLT' THEN 'V' WHEN 'predefined.unit.volume.LITER' THEN 'l' ELSE unit END AS unit\nFROM signal\nWHERE signal_key = '${signal}'\n  AND machine_name ~ '^${machine}$'\nGROUP BY machine_name, unit\nORDER BY machine_name"
+          "rawSql": "SELECT\n  machine_name,\n  selector_last(value, time)['value'] AS value,\n  selector_last(value, time)['time'] AS time,\n  CASE unit WHEN 'predefined.unit.NUMBER' THEN '–' WHEN 'predefined.unit.PERCENT' THEN '%' WHEN 'predefined.unit.acceleration.G' THEN 'g' WHEN 'predefined.unit.angle.DEGREE' THEN '°' WHEN 'predefined.unit.datavolume.BYTE' THEN 'byte' WHEN 'predefined.unit.flow.LITER_PER_HOUR' THEN 'l/h' WHEN 'predefined.unit.mass.METRIC_TON' THEN 't' WHEN 'predefined.unit.pressure.KILOPASCAL' THEN 'kPa' WHEN 'predefined.unit.rotation.RPM' THEN 'rpm' WHEN 'predefined.unit.speed.METERS_PER_SECOND' THEN 'm/s' WHEN 'predefined.unit.temperature.CELSIUS' THEN '°C' WHEN 'predefined.unit.time.HOUR' THEN 'hr' WHEN 'predefined.unit.voltage.VOLT' THEN 'V' WHEN 'predefined.unit.volume.LITER' THEN 'l' ELSE unit END AS unit\nFROM signal\nWHERE signal_key = '${signal}'\n  AND machine_name ~ '^${machine}$'\n  AND time >= now() - INTERVAL '72 hours'\nGROUP BY machine_name, unit\nORDER BY machine_name"
         }
       ],
       "fieldConfig": {
